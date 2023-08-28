@@ -10,7 +10,7 @@ import 'package:neuro_task/pages/games/trace_shape.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: prefer_typing_uninitialized_variables
-  var patientId;
+var patientId;
 // ignore: prefer_typing_uninitialized_variables
 var email;
 
@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                           height: 100.h,
                           width: double.maxFinite.w,
                           color: Colors.white,
-                          child: const Center(child: Text("Server Error ❗")));
+                          child: const Center(child: Text("Server Loading ❗")));
                       }
                     },
                   ),
