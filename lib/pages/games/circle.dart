@@ -17,12 +17,16 @@ class Circle extends StatefulWidget {
 class _CircleState extends State<Circle> {
   int start = 0, end = 0;
   final List<Offset> _points = [];
+  final List<List<Offset>> _pointsList = [];
+  final List<Offset> _points2 = [];
+  final List<List<Offset>> _pointsList2 = [];
   bool isDrawingInsideBox = false;
   bool isEndingInsideBox = false;
   final CirclePainter _painter = CirclePainter();
   bool _isDrawingInside = true;
   String posX="",posY="",startTime="",endTime="",accuracy="";
   Offset offsetOutside = Offset.zero;
+
 
   
   void screenXYCoordinate(details){
@@ -89,6 +93,7 @@ class _CircleState extends State<Circle> {
             },
             onPanEnd: (DragEndDetails details) {
               if (_points.isNotEmpty) {
+                _pointsList.add([..._points]);
                 setState(() {
                   isEndingInsideBox = screenBox(_points.last);
                 });
@@ -156,7 +161,10 @@ class _CircleState extends State<Circle> {
                       TextButton(
                         onPressed: (){
                           TraceShapeService.reset();
-                          //Get.to(const HomePage());
+                          _points.clear();
+                          _points2.clear();
+                          _pointsList.clear();
+                          _pointsList2.clear();
                         },
                       child: const Text("Reset",
                         style: TextStyle(
@@ -186,6 +194,8 @@ class _CircleState extends State<Circle> {
                     child: GestureDetector(
                       onPanStart: (details) {
                         //Data Collection
+                        _painter.addPoint(details.localPosition);
+                        _points2.add(details.localPosition);
                         MemoryGameFunctions.findTime();
                         TraceShapeService.lineStartTime.add(MemoryGameFunctions.formattedTime);
                         screenXYCoordinate(details);
@@ -195,6 +205,7 @@ class _CircleState extends State<Circle> {
                       onPanUpdate: (details) {
                         setState(() {
                           _painter.addPoint(details.localPosition);
+                          _points2.add(details.localPosition);
                           if (details.localPosition.dx < 0 ||
                               details.localPosition.dx > 900.h ||
                               details.localPosition.dy < 0 ||
@@ -204,7 +215,9 @@ class _CircleState extends State<Circle> {
                         });
                       },
                       onPanEnd: (details) {
+                        _pointsList2.add([..._points2]);
                         final accuracy = calculateAccuracy(_painter);
+                        //print(accuracy);
                         // //print('end in box');
                         // showDialog(
                         //   context: context,
@@ -240,6 +253,7 @@ class _CircleState extends State<Circle> {
                         });
                         TraceShapeService.accuracy.add("${accuracy.toStringAsFixed(2)}%");
                         _painter.reset();
+                        _points2.clear();
                       },
                       child: Container(
                         alignment: Alignment.center,
@@ -250,15 +264,26 @@ class _CircleState extends State<Circle> {
                             width: 5.w,
                           )
                         ),
-                        child: CustomPaint(
-                          size: Size(900.w, 1400.h),
-                          painter: _painter,
-                        ),
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              child: CustomPaint(
+                                size: Size(900.w, 1400.h),
+                                painter: _painter,
+                              ),
+                            ),
+                            Positioned(
+                              child: CustomPaint(
+                                painter: MyCustomPainter2(pointsList: _pointsList2),
+                              ),
+                            ),
+                          ],
+                        )
                       ),
                     ),
                   ),
                   CustomPaint(
-                    painter: MyCustomPainter(points: _points),
+                    painter: MyCustomPainter(pointsList: _pointsList),
                   ),
                 ],
               ),
@@ -305,19 +330,21 @@ class _CircleState extends State<Circle> {
 }
 
 class MyCustomPainter extends CustomPainter {
-  List<Offset> points = [];
+  final List<List<Offset>> pointsList;
 
-  MyCustomPainter({required this.points});
+  MyCustomPainter({required this.pointsList});
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = Paint()
+    final Paint paint = Paint()
       ..color = Colors.black
       ..strokeWidth = 4.0
       ..strokeCap = StrokeCap.round;
 
-    for (int i = 0; i < points.length - 1; i++) {
-      canvas.drawLine(points[i], points[i + 1], paint);
+    for (final points in pointsList) {
+      for (int i = 0; i < points.length - 1; i++) {
+        canvas.drawLine(points[i], points[i + 1], paint);
+      }
     }
   }
 
@@ -327,7 +354,33 @@ class MyCustomPainter extends CustomPainter {
   }
 }
 
-class CirclePainter extends CustomPainter {
+class MyCustomPainter2 extends CustomPainter {
+  final List<List<Offset>> pointsList;
+
+  MyCustomPainter2({required this.pointsList});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 4.0
+      ..strokeCap = StrokeCap.round;
+
+    for (final points in pointsList) {
+      for (int i = 0; i < points.length - 1; i++) {
+        canvas.drawLine(points[i], points[i + 1], paint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+
+class CirclePainter extends CustomPainter { 
 
   final Paint _paint;
   final List<Offset> points = [];
@@ -337,10 +390,10 @@ class CirclePainter extends CustomPainter {
     ..strokeWidth = 5.0
     ..style = PaintingStyle.stroke;
 
-  final _paint2 = Paint()
-    ..color = Colors.black
-    ..strokeWidth = 3.0
-    ..style = PaintingStyle.stroke;
+  // final _paint2 = Paint()
+  //   ..color = Colors.black
+  //   ..strokeWidth = 3.0
+  //   ..style = PaintingStyle.stroke;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -348,9 +401,9 @@ class CirclePainter extends CustomPainter {
     final radius = size.width / 3;
     canvas.drawCircle(center, radius, _paint);
 
-    for (int i = 0; i < points.length-1; i++) {
-      canvas.drawLine(points[i], points[i + 1], _paint2);
-    }
+    //  for (int i = 0; i < points.length-1; i++) {
+    //   canvas.drawLine(points[i], points[i + 1], _paint2);
+    // }
   }
 
   @override

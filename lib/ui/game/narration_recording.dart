@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:neuro_task/constant/my_text.dart';
-import 'package:neuro_task/constant/passage.dart';
+import 'package:neuro_task/constant/narration_text.dart';
 import 'package:neuro_task/pages/homepage.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
@@ -13,14 +13,14 @@ import 'package:just_audio/just_audio.dart';
 import 'package:noise_meter/noise_meter.dart';
 
 
-class GrandFatherRecording extends StatefulWidget {
-  const GrandFatherRecording({super.key});
+class NarrationRecording extends StatefulWidget {
+  const NarrationRecording({super.key});
 
   @override
-  State<GrandFatherRecording> createState() => _GrandFatherRecordingState();
+  State<NarrationRecording> createState() => _NarrationRecordingState();
 }
 
-class _GrandFatherRecordingState extends State<GrandFatherRecording> {
+class _NarrationRecordingState extends State<NarrationRecording> {
 
   @override
   void initState() {
@@ -236,7 +236,7 @@ Future<void> _playRecordedAudio() async {
               ],
             ),
             SizedBox(height: 50.h),
-            MyText(text: "Grandfather Passage", size: 80.sp, overflow: false, bold: true, color: Colors.white),
+            MyText(text: "Narration", size: 80.sp, overflow: false, bold: true, color: Colors.white),
             SizedBox(height: 50.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -278,15 +278,15 @@ Future<void> _playRecordedAudio() async {
               color: Colors.transparent,
               child: Column(
                 children: [
-                  SizedBox(height: 100.h),
+                  SizedBox(height: 300.h),
                   Container(
-                    height: 1000.h,
+                    height: 500.h,
                     width: double.maxFinite.w,
                     color: Colors.transparent,
                     margin: EdgeInsets.symmetric(horizontal: 30.w),
-                    child: MyText(text: Passage.myText, size: 60.sp, overflow: false, bold: false, color: Colors.white),
+                    child: Center(child: MyText(text: NarrationText.text, size: 60.sp, overflow: false, bold: false, color: Colors.white)),
                   ),
-                  SizedBox(height: 80.h),
+                  SizedBox(height: 400.h),
                   ElevatedButton(
                     onPressed: (){
                       setState(() {

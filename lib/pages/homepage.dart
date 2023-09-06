@@ -6,6 +6,7 @@ import 'package:neuro_task/constant/ip.dart';
 import 'package:neuro_task/pages/games/grandfather_passage.dart';
 import 'package:neuro_task/pages/games/memory_game.dart';
 import 'package:http/http.dart' as http;
+import 'package:neuro_task/pages/games/narration.dart';
 import 'package:neuro_task/pages/games/trace_shape.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -95,6 +96,12 @@ class _HomePageState extends State<HomePage> {
                       Get.to(const TraceShape());
                     },
                     child: customCard("Trace Shape","Draw the shape with hand","assets/images/trace-shape.png"),
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      Get.to(const Narration());
+                    },
+                    child: customCard("Narration Reading","Read The Single Line Loudly","assets/images/narration.png"),
                   ),
                 ],
               ),
