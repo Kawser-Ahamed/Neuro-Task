@@ -46,6 +46,7 @@ dependencies:
   audioplayers: ^5.1.0
   just_audio: ^0.9.34
   noise_meter: ^4.0.1
+  screenshot: ^2.1.0
   intl: ^0.18.1
   path: ^1.8.3
   http: ^1.1.0

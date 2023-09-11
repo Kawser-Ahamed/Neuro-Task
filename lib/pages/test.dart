@@ -1,72 +1,61 @@
+
+// import 'dart:typed_data';
 // import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:screenshot/screenshot.dart';
 
-// class Circle2 extends StatefulWidget {
-//   const Circle2({Key? key}) : super(key: key);
-
+// class ScreenshotWidget extends StatefulWidget {
 //   @override
-//   State<Circle2> createState() => _Circle2State();
+//   _ScreenshotWidgetState createState() => _ScreenshotWidgetState();
 // }
 
-// class _Circle2State extends State<Circle2> {
-//    List<Path> _paths = []; // Store multiple paths
-//   Path _currentPath = Path(); // Store the current path
+// class _ScreenshotWidgetState extends State<ScreenshotWidget> {
+//   final _screenshotController = ScreenshotController();
+//   Uint8List? _capturedImageBytes;
+
 
 //   @override
 //   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: GestureDetector(
-//         onPanStart: (details) {
-//           setState(() {
-//             _currentPath = Path();
-//             _currentPath.moveTo(details.localPosition.dx, details.localPosition.dy);
-//           });
-//         },
-//         onPanUpdate: (details) {
-//           setState(() {
-//             _currentPath.lineTo(details.localPosition.dx, details.localPosition.dy);
-//           });
-//         },
-//         onPanEnd: (_) {
-//           setState(() {
-//             _paths.add(_currentPath);
-//           });
-//         },
-//         child: CustomPaint(
-//           painter: MyCustomPainter(paths: _paths),
-//           child: Container(),
-//         ),
-//       ),
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: () {
-//           setState(() {
-//             _paths.clear();
-//           });
-//         },
-//         child: Icon(Icons.clear),
+//     return Container(
+//       height: double.maxFinite.h,
+//       width: double.maxFinite.w,
+//       color: Colors.white,
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: <Widget>[
+//           Screenshot(
+//             controller: _screenshotController,
+//             child: Container(
+//               color: Colors.blue, // Your page content here
+//               child: const Center(
+//                 child: Text(
+//                   '',
+//                   style: TextStyle(color: Colors.white),
+//                 ),
+//               ),
+//             ),
+//           ),
+//           SizedBox(height: 20),
+//           ElevatedButton(
+//             onPressed: _captureScreenshot,
+//             child: Text('Capture Screenshot'),
+//           ),
+//           SizedBox(height: 20),
+//           if (_capturedImageBytes != null)
+//             Image.memory(
+//               _capturedImageBytes!,
+//               width: 200,
+//               height: 200,
+//             ),
+//         ],
 //       ),
 //     );
 //   }
-// }
 
-// class MyCustomPainter extends CustomPainter {
-//   final List<Path> paths;
-
-//   MyCustomPainter({required this.paths});
-
-//   @override
-//   void paint(Canvas canvas, Size size) {
-//     final Paint paint = Paint()
-//       ..color = Colors.black
-//       ..strokeWidth = 4.0
-//       ..strokeCap = StrokeCap.round;
-
-//     for (final path in paths) {
-//       canvas.drawPath(path, paint);
-//     }
-//   }
-
-//   @override
-//   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-//     return true;
+//   void _captureScreenshot() async {
+//     final imageBytes = await _screenshotController.capture();
+//     setState(() {
+//       _capturedImageBytes = imageBytes;
+//     });
 //   }
 // }
