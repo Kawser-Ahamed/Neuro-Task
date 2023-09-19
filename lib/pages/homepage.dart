@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:neuro_task/constant/ip.dart';
+import 'package:neuro_task/pages/authentication/login.dart';
 import 'package:neuro_task/pages/games/grandfather_passage.dart';
 import 'package:neuro_task/pages/games/memory_game.dart';
 import 'package:http/http.dart' as http;
@@ -102,6 +103,14 @@ class _HomePageState extends State<HomePage> {
                       Get.to(const Narration());
                     },
                     child: customCard("Narration Reading","Read The Single Line Loudly","assets/images/narration.png"),
+                  ),
+                  TextButton(
+                    onPressed: () async{
+                      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                      sharedPreferences.remove('email');
+                      Get.to(const Login());
+                    },
+                     child: const Text('Logout'),
                   ),
                 ],
               ),

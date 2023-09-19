@@ -349,7 +349,7 @@ class _CircleState extends State<Circle> {
 
   bool screenBox(Offset point) {
     final boxCenter = Offset(MediaQuery.of(context).size.width / 2,
-        MediaQuery.of(context).size.height / 2); // Center of the red box
+    MediaQuery.of(context).size.height / 2); // Center of the red box
     final boxWidth = 900.w; // Width of the red box
     final boxHeight = 1400.h; // Height of the red box
 

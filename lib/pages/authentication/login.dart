@@ -45,7 +45,7 @@ class _LoginState extends State<Login> {
               SizedBox(height:80.h),
               ElevatedButton(
                 onPressed: (){
-                  LoginService().login(email.text, password.text);
+                  LoginService().firebaseLogin(email.text, password.text);
                 }, 
                 style:ButtonStyle(
                   shape: MaterialStatePropertyAll(

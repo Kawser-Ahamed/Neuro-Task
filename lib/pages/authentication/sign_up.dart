@@ -51,76 +51,83 @@ class _SignUpState extends State<SignUp> {
                 ),
                 SizedBox(height: 200.h),
                 Container(
-                  height: 1581.h,
+                  height: 1250.h,
                   width: double.maxFinite.w,
                   color: Colors.transparent,
                   child: SingleChildScrollView(
                     physics: const ClampingScrollPhysics(),
                     child: Container(
+                      height: 1250.h,
                       color: Colors.transparent,
-                      child: Column(
-                        children: [
-                          MyTextField(width: 900, text: "Email", icon: Icons.mail, controller: email, check: false),
-                          SizedBox(height: 50.h),
-                          MyTextField(width: 900, text: "Password", icon: Icons.key, controller: password, check: true),
-                          SizedBox(height: 50.h),
-                          MyTextField(width: 900, text: "Confirm Password", icon: Icons.key, controller: confirmPassword, check: true),
-                          SizedBox(height: 50.h),
-                          MyTextField(width: 900, text: "First Name", icon: Icons.person, controller: firstName, check: false),
-                          SizedBox(height: 50.h),
-                          MyTextField(width: 900, text: "Last Name", icon: Icons.people_alt_outlined, controller: lastName, check: false),
-                          SizedBox(height: 50.h),
-                          MyTextField(width: 900, text: "Mobile Number", icon: Icons.phone, controller: number, check: false),
-                          SizedBox(height: 50.h),
-                          MyTextField(width: 900, text: "Date Of Birth (DD-MM-YYYY)", icon: Icons.date_range, controller: birthDate, check: false),
-                          SizedBox(height: 50.h),
-                          MyTextField(width: 900, text: "Ethincity", icon: Icons.dark_mode_rounded, controller: ethincity, check: false),
-                          SizedBox(height: 50.h), 
-                          MyTextField(width: 900, text: "Gender", icon: Icons.male, controller: gender, check: false),
-                          SizedBox(height: 100.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ElevatedButton(
-                                onPressed: (){
-                                  Get.back();
-                                }, 
-                                style:ButtonStyle(
-                                shape: MaterialStatePropertyAll(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(30.sp)),
-                                  ),
-                                ),
-                                backgroundColor: const MaterialStatePropertyAll(Colors.red),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 100.w,vertical: 30.h),
-                                    child: MyText(text: "Back", size: 60.sp, overflow: false, bold: false, color: Colors.white)
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: (){
-                                  SignUpService().signUp(email.text, password.text,confirmPassword.text, firstName.text, lastName.text, number.text, birthDate.text, ethincity.text, gender.text);
-                                }, 
-                                style:ButtonStyle(
-                                shape: MaterialStatePropertyAll(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(30.sp)),
-                                  ),
-                                ),
-                                backgroundColor: const MaterialStatePropertyAll(Colors.lightBlue),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 100.w,vertical: 30.h),
-                                    child: MyText(text: "Signup", size: 60.sp, overflow: false, bold: false, color: Colors.white)
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 100.h),
-                        ],
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            MyTextField(width: 900, text: "Email", icon: Icons.mail, controller: email, check: false),
+                            SizedBox(height: 50.h),
+                            MyTextField(width: 900, text: "Password", icon: Icons.key, controller: password, check: true),
+                            SizedBox(height: 50.h),
+                            MyTextField(width: 900, text: "Confirm Password", icon: Icons.key, controller: confirmPassword, check: true),
+                            SizedBox(height: 50.h),
+                            MyTextField(width: 900, text: "First Name", icon: Icons.person, controller: firstName, check: false),
+                            SizedBox(height: 50.h),
+                            MyTextField(width: 900, text: "Last Name", icon: Icons.people_alt_outlined, controller: lastName, check: false),
+                            SizedBox(height: 50.h),
+                            MyTextField(width: 900, text: "Mobile Number", icon: Icons.phone, controller: number, check: false),
+                            SizedBox(height: 50.h),
+                            MyTextField(width: 900, text: "Date Of Birth (DD-MM-YYYY)", icon: Icons.date_range, controller: birthDate, check: false),
+                            SizedBox(height: 50.h),
+                            MyTextField(width: 900, text: "Ethincity", icon: Icons.dark_mode_rounded, controller: ethincity, check: false),
+                            SizedBox(height: 50.h), 
+                            MyTextField(width: 900, text: "Gender", icon: Icons.male, controller: gender, check: false),
+                            SizedBox(height: 500.h),
+                          ],
+                        ),
                       ),
+                      
                     ),
+                  ),
+                ),
+                Container(
+                  height: 300.h,
+                  color: Colors.transparent,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: (){
+                          Get.back();
+                        }, 
+                        style:ButtonStyle(
+                        shape: MaterialStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(30.sp)),
+                          ),
+                        ),
+                          backgroundColor: const MaterialStatePropertyAll(Colors.red),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 100.w,vertical: 30.h),
+                            child: MyText(text: "Back", size: 60.sp, overflow: false, bold: false, color: Colors.white)
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: (){
+                          SignUpService().firebaseSignUp(email.text, password.text,confirmPassword.text, firstName.text, lastName.text, number.text, birthDate.text, ethincity.text, gender.text);
+                        }, 
+                        style:ButtonStyle(
+                          shape: MaterialStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(30.sp)),
+                            ),
+                          ),
+                          backgroundColor: const MaterialStatePropertyAll(Colors.lightBlue),
+                        ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 100.w,vertical: 30.h),
+                            child: MyText(text: "Signup", size: 60.sp, overflow: false, bold: false, color: Colors.white)
+                          ),
+                      ),
+                    ],
                   ),
                 ),
               ],

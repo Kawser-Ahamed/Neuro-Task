@@ -10,14 +10,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: prefer_typing_uninitialized_variables
 var email;
-class SpalshScreen extends StatefulWidget {
-  const SpalshScreen({super.key});
+class SplashScren extends StatefulWidget {
+  const SplashScren({super.key});
 
   @override
-  State<SpalshScreen> createState() => _SpalshScreenState();
+  State<SplashScren> createState() => _SplashScrenState();
 }
 
-class _SpalshScreenState extends State<SpalshScreen> {
+class _SplashScrenState extends State<SplashScren> {
 
    @override
   void initState() {
