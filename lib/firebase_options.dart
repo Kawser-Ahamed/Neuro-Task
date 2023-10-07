@@ -28,7 +28,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -48,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBaliFkv6Oaoe2WKokUHAzyA6BfRXK6EHA',
-    appId: '1:583039940780:android:21985503c6b1f963a94709',
+    appId: '1:583039940780:android:63fe390ac0ccceeca94709',
     messagingSenderId: '583039940780',
     projectId: 'neuro-task',
     storageBucket: 'neuro-task.appspot.com',
@@ -56,19 +59,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAAYeFfGi8DARZJZAzmRi3g9JnTcFTCVP0',
-    appId: '1:583039940780:ios:50ce91d9b4e02626a94709',
+    appId: '1:583039940780:ios:31abcbfb46884279a94709',
     messagingSenderId: '583039940780',
     projectId: 'neuro-task',
     storageBucket: 'neuro-task.appspot.com',
     iosBundleId: 'com.example.neuroTask',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAAYeFfGi8DARZJZAzmRi3g9JnTcFTCVP0',
-    appId: '1:583039940780:ios:c9d88a5e470212b4a94709',
-    messagingSenderId: '583039940780',
-    projectId: 'neuro-task',
-    storageBucket: 'neuro-task.appspot.com',
-    iosBundleId: 'com.example.neuroTask.RunnerTests',
   );
 }

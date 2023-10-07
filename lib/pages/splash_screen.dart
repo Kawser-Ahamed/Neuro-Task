@@ -9,7 +9,7 @@ import 'package:neuro_task/pages/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: prefer_typing_uninitialized_variables
-var email;
+var patientemail;
 class SplashScren extends StatefulWidget {
   const SplashScren({super.key});
 
@@ -23,7 +23,7 @@ class _SplashScrenState extends State<SplashScren> {
   void initState() {
     getValidation().whenComplete((){
       Timer(const Duration(seconds: 2), () { 
-        (email == null) ? Get.to(const Login()) : Get.to(const HomePage());
+        (patientemail == null) ? Get.to(const Login()) : Get.to(const HomePage());
       });
     });
     super.initState();
@@ -32,7 +32,7 @@ class _SplashScrenState extends State<SplashScren> {
   Future getValidation() async{
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var getEmail = sharedPreferences.getString('email');
-    email = getEmail;
+    patientemail = getEmail;
   }
 
   @override
@@ -42,13 +42,19 @@ class _SplashScrenState extends State<SplashScren> {
         body: Container(
           height: double.maxFinite.h,
           width: double.maxFinite.w,
-          color: Colors.blue,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/splash_screen.jpg'),
+              fit: BoxFit.fill,
+            ),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              MyText(text: "Neuro Task", size: 80.sp, overflow: false, bold: true, color: Colors.white),
+              SizedBox(height: 600.h),
+              MyText(text: "Neuro Task", size: 100.sp, overflow: false, bold: true, color: Colors.white),
               SizedBox(height: 50.h),
-              const CircularProgressIndicator(),
+              const CircularProgressIndicator(color: Colors.white),
             ],
           ),
         ),

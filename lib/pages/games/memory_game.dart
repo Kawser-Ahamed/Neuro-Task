@@ -123,7 +123,7 @@ _startRecord() async{
         body: GestureDetector(
           onTap:(){
             MemoryGameFunctions.findTime();
-            MemoryGameService.memoyGameData('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 0, 0);
+            MemoryGameService.memoryGameDataFirebase('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 0, 0);
           },
           onTapDown: (TapDownDetails details){
             MemoryGameFunctions.screenPositionValue(details, context);
@@ -202,7 +202,7 @@ _startRecord() async{
                               if(cardCount==2){
                                 successCard();
                               }
-                              MemoryGameService.memoyGameData('1001',patientId, MemoryGameFunctions.formattedTime, success,MemoryGameFunctions.screenPosition, 1, MemoryGameFunctions.cardPosition);
+                              MemoryGameService.memoryGameDataFirebase('1001',patientId, MemoryGameFunctions.formattedTime, success,MemoryGameFunctions.screenPosition, 1, MemoryGameFunctions.cardPosition);
                             }
                           },
                           child: FlipCard( 
@@ -230,7 +230,7 @@ _startRecord() async{
                               if(cardCount==2){
                               successCard();
                               }
-                              MemoryGameService.memoyGameData('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 2, MemoryGameFunctions.cardPosition);
+                              MemoryGameService.memoryGameDataFirebase('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 2, MemoryGameFunctions.cardPosition);
                             }
                           },
                         child: FlipCard(
@@ -259,7 +259,7 @@ _startRecord() async{
                               if(cardCount==2){
                                successCard();
                               }
-                              MemoryGameService.memoyGameData('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 3, MemoryGameFunctions.cardPosition); 
+                              MemoryGameService.memoryGameDataFirebase('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 3, MemoryGameFunctions.cardPosition); 
                             }
                           },
                         child: FlipCard(
@@ -292,7 +292,7 @@ _startRecord() async{
                               if(cardCount==2){
                               successCard();
                               }
-                              MemoryGameService.memoyGameData('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 4, MemoryGameFunctions.cardPosition);
+                              MemoryGameService.memoryGameDataFirebase('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 4, MemoryGameFunctions.cardPosition);
                             }
                           },
                         child: FlipCard(
@@ -320,7 +320,7 @@ _startRecord() async{
                               if(cardCount==2){
                               successCard();
                               }
-                              MemoryGameService.memoyGameData('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 5, MemoryGameFunctions.cardPosition);
+                              MemoryGameService.memoryGameDataFirebase('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 5, MemoryGameFunctions.cardPosition);
                             }
                           },
                         child: FlipCard(
@@ -348,7 +348,7 @@ _startRecord() async{
                               if(cardCount==2){
                               successCard();
                               }
-                              MemoryGameService.memoyGameData('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 6, MemoryGameFunctions.cardPosition);
+                              MemoryGameService.memoryGameDataFirebase('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 6, MemoryGameFunctions.cardPosition);
                             }
                           },
                         child: FlipCard(
@@ -381,7 +381,7 @@ _startRecord() async{
                               if(cardCount==2){
                               successCard();
                              }
-                             MemoryGameService.memoyGameData('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 7, MemoryGameFunctions.cardPosition);
+                             MemoryGameService.memoryGameDataFirebase('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 7, MemoryGameFunctions.cardPosition);
                             }
                           },
                         child: FlipCard(
@@ -409,7 +409,7 @@ _startRecord() async{
                               if(cardCount==2){
                               successCard();
                               }
-                              MemoryGameService.memoyGameData('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 8, MemoryGameFunctions.cardPosition);
+                              MemoryGameService.memoryGameDataFirebase('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 8, MemoryGameFunctions.cardPosition);
                             }
                           },
                         child: FlipCard(
@@ -437,7 +437,7 @@ _startRecord() async{
                               if(cardCount==2){
                               successCard();
                               }
-                              MemoryGameService.memoyGameData('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 9, MemoryGameFunctions.cardPosition);
+                              MemoryGameService.memoryGameDataFirebase('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 9, MemoryGameFunctions.cardPosition);
                             }  
                         },
                         child: FlipCard(
@@ -470,7 +470,7 @@ _startRecord() async{
                               if(cardCount==2){
                               successCard();
                               }
-                              MemoryGameService.memoyGameData('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 10, MemoryGameFunctions.cardPosition);
+                              MemoryGameService.memoryGameDataFirebase('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 10, MemoryGameFunctions.cardPosition);
                             }
                           },
                         child: FlipCard(
@@ -498,7 +498,7 @@ _startRecord() async{
                               if(cardCount==2){
                               successCard();
                               }
-                              MemoryGameService.memoyGameData('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 11, MemoryGameFunctions.cardPosition);
+                              MemoryGameService.memoryGameDataFirebase('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 11, MemoryGameFunctions.cardPosition);
                             }
                           },
                         child: FlipCard(
@@ -526,7 +526,7 @@ _startRecord() async{
                               if(cardCount==2){
                               successCard();
                               }
-                              MemoryGameService.memoyGameData('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 12, MemoryGameFunctions.cardPosition);
+                              MemoryGameService.memoryGameDataFirebase('1001',patientId, MemoryGameFunctions.formattedTime, success, MemoryGameFunctions.screenPosition, 12, MemoryGameFunctions.cardPosition);
                             }
                           },
                         child: FlipCard(

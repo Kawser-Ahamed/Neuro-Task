@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -9,6 +10,7 @@ import 'package:neuro_task/pages/games/memory_game.dart';
 import 'package:http/http.dart' as http;
 import 'package:neuro_task/pages/games/narration.dart';
 import 'package:neuro_task/pages/games/trace_shape.dart';
+import 'package:neuro_task/pages/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: prefer_typing_uninitialized_variables
@@ -53,32 +55,61 @@ class _HomePageState extends State<HomePage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  FutureBuilder(
-                    future: getPatientId(),
-                    builder: (context, snapshot) {
-                      if(snapshot.hasData){
-                        return Container(
-                          height: 0.h,
-                          width: double.maxFinite.w,
-                          color: Colors.white,
-                          child: ListView.builder(
-                            itemCount: snapshot.data.length,
-                              itemBuilder: (context, index) {
-                                var mydata = snapshot.data[index];
-                                patientId = mydata['p_id'];
-                                return Text(mydata['p_id']);
-                              },
-                          ),
-                        );
-                      }
-                      else{
-                        return Container(
-                          height: 100.h,
-                          width: double.maxFinite.w,
-                          color: Colors.white,
-                          child: const Center(child: Text("Server Loading ❗")));
-                      }
-                    },
+                  // FutureBuilder(
+                  //   future: getPatientId(),
+                  //   builder: (context, snapshot) {
+                  //     if(snapshot.hasData){
+                  //       return Container(
+                  //         height: 0.h,
+                  //         width: double.maxFinite.w,
+                  //         color: Colors.white,
+                  //         child: ListView.builder(
+                  //           itemCount: snapshot.data.length,
+                  //             itemBuilder: (context, index) {
+                  //               var mydata = snapshot.data[index];
+                  //               patientId = mydata['p_id'];
+                  //               return Text(mydata['p_id']);
+                  //             },
+                  //         ),
+                  //       );
+                  //     }
+                  //     else{
+                  //       return Container(
+                  //         height: 100.h,
+                  //         width: double.maxFinite.w,
+                  //         color: Colors.white,
+                  //         child: const Center(child: Text("Server Loading ❗")));
+                  //     }
+                  //   },
+                  // ),
+                  Container(
+                    height: 0.h,
+                    width: 0.w,
+                    color: Colors.blue,
+                    child: StreamBuilder(
+                      stream: FirebaseFirestore.instance.collection(patientemail).snapshots(), 
+                      builder: (context, snapshot) {
+                        if(snapshot.hasData){
+                          List<dynamic> patientList = snapshot.data!.docs.map((e) => e.data()).toList();
+                          return ListView.builder(
+                            itemCount: patientList.length,
+                            itemBuilder: (context, index) {
+                              Map<dynamic,dynamic> patientMap = patientList[index] as Map<dynamic,dynamic>;
+                              patientId = patientMap['Patient Id'];
+                              return Container(
+                                height: 100.h,
+                                width: 100.w,
+                                color: Colors.green,
+                                child: Text(patientMap['Patient Id']),
+                              );
+                            },
+                          );
+                        }
+                        else{
+                          return Container(height: 100.h,width: 100.w,color: Colors.red,);
+                        }
+                      },
+                    ),
                   ),
                   GestureDetector(
                     onTap: (){
