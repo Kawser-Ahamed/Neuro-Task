@@ -52,6 +52,7 @@ dependencies:
   cloud_firestore: ^4.9.1
   firebase_auth: ^4.9.0
   firebase_storage: ^11.2.6
+  device_screen_recorder: ^0.0.4
   intl: ^0.18.1
   path: ^1.8.3
   http: ^1.1.0

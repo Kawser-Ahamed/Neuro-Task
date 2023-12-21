@@ -35,9 +35,8 @@ class MemoryGameService{
 
   static Future<void> memoryGameDataFirebase(String gameId,var patientId,String deviceTime,int success,int screenLocation,int cardNumber,int cardRegion) async{
     DateTime currentTime = DateTime.now();
-    int miliSecond = currentTime.millisecondsSinceEpoch;
     try{
-      FirebaseFirestore.instance.collection('Memory Game - $patientemail').doc(miliSecond.toString()).set({
+      FirebaseFirestore.instance.collection('Memory Game - 1001 - $patientemail').doc('${currentTime.toString()} - patientId').set({
         'game_id' : gameId,
         'p_id' : patientId,
         'device_time' : deviceTime,
@@ -57,5 +56,12 @@ class MemoryGameService{
       // ignore: avoid_print
       print(e);
     }
+  }
+
+  static Future<void> memoryGameVideoLink(String videoLink) async{
+    DateTime time = DateTime.now();
+    FirebaseFirestore.instance.collection('Games Video - $patientemail').doc('${time.toString()} - Memory Game').set({
+      'Camera Video' : videoLink,
+    });
   }
 }

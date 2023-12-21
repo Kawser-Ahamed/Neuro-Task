@@ -1,61 +1,71 @@
+import 'dart:io';
 
-// import 'dart:typed_data';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:screenshot/screenshot.dart';
+import 'package:device_screen_recorder/device_screen_recorder.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter/material.dart';
 
-// class ScreenshotWidget extends StatefulWidget {
-//   @override
-//   _ScreenshotWidgetState createState() => _ScreenshotWidgetState();
-// }
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
 
-// class _ScreenshotWidgetState extends State<ScreenshotWidget> {
-//   final _screenshotController = ScreenshotController();
-//   Uint8List? _capturedImageBytes;
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
 
+class _MyHomePageState extends State<MyHomePage> {
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       height: double.maxFinite.h,
-//       width: double.maxFinite.w,
-//       color: Colors.white,
-//       child: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: <Widget>[
-//           Screenshot(
-//             controller: _screenshotController,
-//             child: Container(
-//               color: Colors.blue, // Your page content here
-//               child: const Center(
-//                 child: Text(
-//                   '',
-//                   style: TextStyle(color: Colors.white),
-//                 ),
-//               ),
-//             ),
-//           ),
-//           SizedBox(height: 20),
-//           ElevatedButton(
-//             onPressed: _captureScreenshot,
-//             child: Text('Capture Screenshot'),
-//           ),
-//           SizedBox(height: 20),
-//           if (_capturedImageBytes != null)
-//             Image.memory(
-//               _capturedImageBytes!,
-//               width: 200,
-//               height: 200,
-//             ),
-//         ],
-//       ),
-//     );
-//   }
+bool recording = false;
+  String path = '';
 
-//   void _captureScreenshot() async {
-//     final imageBytes = await _screenshotController.capture();
-//     setState(() {
-//       _capturedImageBytes = imageBytes;
-//     });
-//   }
-// }
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Plugin example app'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              recording
+                  ? OutlinedButton(
+                      onPressed: () async {
+                        var file = await DeviceScreenRecorder.stopRecordScreen();
+                        final firebase_storage.Reference storageReference = firebase_storage.FirebaseStorage.instance.ref("Screen record/myrecord");
+                         try{
+                          File files = File(file.toString());
+                          await storageReference.putFile(File(files.path));
+                          debugPrint('submitted');
+                         }
+                         catch(e){
+                          debugPrint(e.toString());
+                         }
+                        setState(() {
+                          path = file ?? '';
+                          recording = false;
+                        });
+                      },
+                      child: const Text('Stop'),
+                    )
+                  : OutlinedButton(
+                      onPressed: () async {
+                        var status = await DeviceScreenRecorder.startRecordScreen();
+                        // var status = await ScreenRecorder.startRecordScreen(name: 'example');
+                        setState(() {
+                          recording = status ?? false;
+                        });
+                      },
+                      child: const Text('Start'),
+                    ),
+              Text(path)
+            ],
+          ),
+        ),
+      );
+  }
+}

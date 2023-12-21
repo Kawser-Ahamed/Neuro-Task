@@ -110,23 +110,31 @@ class _SignUpState extends State<SignUp> {
                             child: MyText(text: "Back", size: 60.sp, overflow: false, bold: false, color: Colors.white)
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: (){
-                          SignUpService().firebaseSignUp(email.text, password.text,confirmPassword.text, firstName.text, lastName.text, number.text, birthDate.text, ethincity.text, gender.text);
-                        }, 
-                        style:ButtonStyle(
-                          shape: MaterialStatePropertyAll(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(30.sp)),
-                            ),
-                          ),
-                          backgroundColor: const MaterialStatePropertyAll(Colors.lightBlue),
+                     InkWell(
+                      onTap: (){
+                        setState(() {
+                          SignUpService().firebaseSignUp(email.text, password.text,confirmPassword.text, firstName.text, lastName.text, number.text, birthDate.text, ethincity.text, gender.text).whenComplete((){
+                            setState(() {
+                              
+                            });
+                          });
+                        });
+                      },
+                       child: Container(
+                        height: 130.h,
+                        width: 450.w,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.lightBlue,
+                          borderRadius: BorderRadius.all(Radius.circular(30.sp)),
                         ),
-                          child: Padding(
+                        child: (SignUpService.isLoading) ? Padding( padding: EdgeInsets.symmetric(horizontal: 50.w) ,child: const Center( child: CircularProgressIndicator(color: Colors.white,))) :  
+                          Padding(
                             padding: EdgeInsets.symmetric(horizontal: 100.w,vertical: 30.h),
-                            child: MyText(text: "Signup", size: 60.sp, overflow: false, bold: false, color: Colors.white)
+                              child: MyText(text: "Signup", size: 60.sp, overflow: false, bold: false, color: Colors.white),
                           ),
-                      ),
+                       ),
+                     )
                     ],
                   ),
                 ),

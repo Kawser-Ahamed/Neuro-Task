@@ -238,40 +238,40 @@ Future<void> _playRecordedAudio() async {
             SizedBox(height: 50.h),
             MyText(text: "Grandfather Passage", size: 80.sp, overflow: false, bold: true, color: Colors.white),
             SizedBox(height: 50.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      size: 150.sp,
-                      color: Colors.white,
-                    ),
-                    SizedBox(height: 50.h),
-                    MyText(text: "Info", size: 70.sp, overflow: false, bold: true, color: Colors.white),
-                  ],
-                ),
-                Column(
-                  children: [
-                    voiceIcon(),
-                    SizedBox(height: 50.h),
-                    MyText(text: 'Voice Level', size: 70.sp, overflow: true, bold: true, color: Colors.white),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Icon(
-                      CupertinoIcons.clock,
-                      size: 150.sp,
-                      color: Colors.white,
-                    ),
-                    SizedBox(height: 50.h),
-                    MyText(text: second.toString(), size: 70.sp, overflow: false, bold: true, color: Colors.white),
-                  ],
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     Column(
+            //       children: [
+            //         Icon(
+            //           Icons.info_outline,
+            //           size: 150.sp,
+            //           color: Colors.white,
+            //         ),
+            //         SizedBox(height: 50.h),
+            //         MyText(text: "Info", size: 70.sp, overflow: false, bold: true, color: Colors.white),
+            //       ],
+            //     ),
+            //     Column(
+            //       children: [
+            //         voiceIcon(),
+            //         SizedBox(height: 50.h),
+            //         MyText(text: 'Voice Level', size: 70.sp, overflow: true, bold: true, color: Colors.white),
+            //       ],
+            //     ),
+            //     Column(
+            //       children: [
+            //         Icon(
+            //           CupertinoIcons.clock,
+            //           size: 150.sp,
+            //           color: Colors.white,
+            //         ),
+            //         SizedBox(height: 50.h),
+            //         MyText(text: second.toString(), size: 70.sp, overflow: false, bold: true, color: Colors.white),
+            //       ],
+            //     ),
+            //   ],
+            // ),
             (recordState) ? Container(
               height: 1550.h,
               width: double.maxFinite.w,

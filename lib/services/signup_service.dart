@@ -4,6 +4,7 @@ import 'package:neuro_task/constant/ip.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:neuro_task/pages/homepage.dart';
+import 'package:neuro_task/pages/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpService{
@@ -58,6 +59,8 @@ class SignUpService{
     }
   }
   
+  static bool isLoading = false;
+
   Future<void> firebaseSignUp(String email,String password,String confirmPassword,String firstName, String lastName,String mobile,String birthDate,String ethincity,String gender) async{
      DateTime currentTime = DateTime.now();
      int id = currentTime.microsecondsSinceEpoch;
@@ -74,16 +77,19 @@ class SignUpService{
       Get.snackbar('Neuro Task', "Weak Password");
     }
     else{
+      isLoading = true;
       try{
+        // ignore: unused_local_variable
         UserCredential user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email, 
           password: password
         );
         SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
         sharedPreferences.setString('email', email);
+        patientemail = email;
         Get.snackbar('Neuro Task', 'Your Account Creation Successfull');
         Get.to(const HomePage());
-        user.user!.sendEmailVerification();
+        //user.user!.sendEmailVerification();
 
         FirebaseFirestore.instance.collection(email).doc(id.toString()).set({
           'Patient Id' : id.toString(),
@@ -104,6 +110,8 @@ class SignUpService{
         }
       } catch (error) {
         Get.snackbar('Error', 'FoodFrenzy Server is Down');
+      }finally{
+        isLoading = false;
       }
     }
   }

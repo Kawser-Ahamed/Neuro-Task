@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:camera/camera.dart';
+import 'package:device_screen_recorder/device_screen_recorder.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:neuro_task/pages/splash_screen.dart';
 import 'package:neuro_task/providers/memory_game_functions.dart';
 import 'package:neuro_task/pages/homepage.dart';
 import 'package:flip_card/flip_card.dart';
@@ -64,6 +67,23 @@ class _MemoryGameState extends State<MemoryGame> {
   if (_isRecording) {
     final file = await _cameraController.stopVideoRecording();
     setState(() => _isRecording = false);
+    DateTime time = DateTime.now();
+    String fileNames = "Memory Game - 1001 - Camera Record Video - $patientemail - ${time.toString()}";
+    final destinationPaths = 'videos/$fileNames';
+
+    final firebase_storage.Reference storageReference = firebase_storage.FirebaseStorage.instance.ref(destinationPaths);
+
+      try {
+        await storageReference.putFile(File(file.path));
+        final downloadURL = await storageReference.getDownloadURL();
+        MemoryGameService.memoryGameVideoLink(downloadURL);
+        debugPrint('Video uploaded to Firebase Storage. Download URL: $downloadURL');
+        
+      } catch (e) {
+        debugPrint('Error uploading video to Firebase Storage: $e');
+      }
+
+
 
     final downloadDirectory = await getExternalStorageDirectory();
     if (downloadDirectory == null) {
@@ -98,11 +118,37 @@ _startRecord() async{
     // ignore: avoid_print
     print('starting..');
 }
+
+Future<void> startScreenRecording() async{
+  await DeviceScreenRecorder.startRecordScreen();
+}
+
+Future<void> stopScreenRecording() async{
+  var file = await DeviceScreenRecorder.stopRecordScreen();
+
+  DateTime time = DateTime.now();
+  String fileNames = "Memory Game - 1001 - Screen Record Video- $patientemail - ${time.toString()}";
+  final destinationPaths = 'videos/$fileNames';
+
+  final firebase_storage.Reference storageReference = firebase_storage.FirebaseStorage.instance.ref(destinationPaths);
+  
+  try {
+    File files = File(file.toString());
+    await storageReference.putFile(File(files.path));
+    final downloadURL = await storageReference.getDownloadURL();
+    MemoryGameService.memoryGameVideoLink(downloadURL);
+    debugPrint('Video uploaded to Firebase Storage. Download URL: $downloadURL');
+  } catch (e) {
+      debugPrint('Error uploading video to Firebase Storage: $e');
+  }
+
+}
   
   
   @override
   void initState() {
     _initCamera();
+    startScreenRecording();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       MemoryGameStartMessage.startMessage(context);
     });
@@ -172,6 +218,7 @@ _startRecord() async{
                        TextButton(
                         onPressed: (){
                           _stopRecord();
+                          stopScreenRecording();
                           Get.to(const HomePage());
                        },
                        child: const Text("Submit",
