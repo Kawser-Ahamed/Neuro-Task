@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:neuro_task/constant/responsive.dart';
 
 class MyTextField extends StatefulWidget {
   final double width;
@@ -20,8 +20,12 @@ class _MyTextFieldState extends State<MyTextField> {
 
   @override
   Widget build(BuildContext context) {
+    double height = Responsive.screenHeight(context);
+    double width = Responsive.screenWidth(context);
     return Container(
-      width: widget.width.w,
+      height: height * 0.1,
+      width: width * widget.width,
+      alignment: Alignment.center,
       color: Colors.transparent,
       child: Form(
         key: _formKey,
@@ -34,7 +38,8 @@ class _MyTextFieldState extends State<MyTextField> {
           },
           decoration: InputDecoration(
             prefixIcon: Icon(widget.icon,
-            color: Colors.black,
+              color: Colors.black,
+              //weight: (width/Responsive.designWidth) * 20,
             ),
             suffixIcon: GestureDetector(
               onTap: (){
@@ -43,7 +48,7 @@ class _MyTextFieldState extends State<MyTextField> {
                 });
               },
               child: Icon(
-                (widget.check==true) ? Icons.remove_red_eye : Icons.arrow_back,
+                (widget.check==true) ? Icons.remove_red_eye : Icons.arrow_back,size: width * 0.07,
                 color: (widget.check==true) ? Colors.black : Colors.transparent,
               ),
             ),
@@ -54,10 +59,10 @@ class _MyTextFieldState extends State<MyTextField> {
             floatingLabelBehavior: FloatingLabelBehavior.auto,
             focusedBorder: OutlineInputBorder(
               borderSide:  const BorderSide(color: Colors.black),
-              borderRadius: BorderRadius.all(Radius.circular(30.sp)),
+              borderRadius: BorderRadius.all(Radius.circular((width/Responsive.designWidth) * 30)),
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(30.sp)),
+              borderRadius: BorderRadius.all(Radius.circular((width/Responsive.designWidth) * 30)),
             ),
           ),
           controller: widget.controller,

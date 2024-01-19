@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neuro_task/constant/my_text.dart';
+import 'package:neuro_task/constant/responsive.dart';
 import 'package:neuro_task/ui/game/narration_recording.dart';
+import 'package:neuro_task/ui/game/narration_start_message.dart';
 
 class Narration extends StatefulWidget {
   const Narration({super.key});
@@ -17,17 +18,19 @@ class _NarrationState extends State<Narration> {
 
   @override
   Widget build(BuildContext context) {
+    double height = Responsive.screenHeight(context);
+    double width = Responsive.screenWidth(context);
     return SafeArea(
       child: Scaffold(
         body: Container(
-          height: double.maxFinite.h,
-          width: double.maxFinite.w,
+          height: height * 1,
+          width: width * 1,
           color: const  Color.fromARGB(255, 43, 43, 43),
           child: (isStart) ? const NarrationRecording()
            : Center(
             child: Container(
-              height: 1000.h,
-              width: 700.w,
+              height: height * 0.8,
+              width: width * 1,
               color: Colors.transparent,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -36,17 +39,21 @@ class _NarrationState extends State<Narration> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      MyText(text: "Instruction", size: 80.sp, overflow: false, bold: true, color: Colors.white),
+                      InkWell(
+                        onTap: (){
+                          NarrationStartMessage.startMessage(context);
+                        },
+                        child: const MyText(text: "Instruction", size: 30, bold: true, color: Colors.white,height: 0.05,width: 0.3)),
                       Icon(
                         CupertinoIcons.speaker_2_fill,
-                        size: 100.sp,
+                        size:  width * 0.08,
                         color: Colors.white,
                       ),
                     ],
                   ),
-                  SizedBox(height: 100.h),
-                  MyText(text: "Read the narration loudly", size: 60.sp, overflow: false, bold: false, color: Colors.white),
-                  SizedBox(height: 100.h),
+                  SizedBox(height: height * 0.1),
+                  const MyText(text: "Read the passage loudly", size:30, bold: false, color: Colors.white,height: 0.05,width: 0.7,),
+                  SizedBox(height: height * 0.1),
                   ElevatedButton(
                     onPressed: (){
                       isStart = true;
@@ -56,8 +63,8 @@ class _NarrationState extends State<Narration> {
                       backgroundColor: MaterialStatePropertyAll(Colors.pink),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 30.h,horizontal: 70.w),
-                      child: MyText(text: "Begin Test", size: 50.sp, overflow: false, bold: true, color: Colors.white)),
+                      padding: EdgeInsets.symmetric(vertical: height * 0.015,horizontal: width * 0.08),
+                      child: const MyText(text: "Begin Test", size: 30,bold: true, color: Colors.white,height: 0.05,width: 0.2,)),
                   ),
                 ],
               ),

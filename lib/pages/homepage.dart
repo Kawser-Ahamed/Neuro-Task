@@ -1,8 +1,9 @@
 //import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:neuro_task/constant/my_text.dart';
+import 'package:neuro_task/constant/responsive.dart';
 //import 'package:neuro_task/constant/ip.dart';
 import 'package:neuro_task/pages/authentication/login.dart';
 import 'package:neuro_task/pages/games/grandfather_passage.dart';
@@ -45,14 +46,19 @@ class _HomePageState extends State<HomePage> {
   //   return data;
   // }
   // ignore: prefer_typing_uninitialized_variables
-
+  double screenHeight = 0.0;
+  double screenWidth = 0.0;
   @override
   Widget build(BuildContext context) {
+    double height = Responsive.screenHeight(context);
+    double width = Responsive.screenWidth(context);
+    screenHeight = height;
+    screenWidth= width;
     return SafeArea(
       child: Scaffold(
         body: Container(
-            height: double.maxFinite.h,
-            width: double.maxFinite.w,
+            height: height * 1,
+            width: width * 1,
             color: Colors.white,
             child: StreamBuilder(
               stream: FirebaseFirestore.instance.collection(patientemail).snapshots(), 
@@ -68,8 +74,8 @@ class _HomePageState extends State<HomePage> {
                     Map<dynamic,dynamic> patientMap = patientList[index] as Map<dynamic,dynamic>;
                     patientId = patientMap['Patient Id'];
                       return Container(
-                        height: 2150.h,
-                        width: double.maxFinite.w,
+                        height: height * 1,
+                        width: width * 1,
                         color: Colors.transparent,
                         child: SingleChildScrollView(
                           child: Column(
@@ -89,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               GestureDetector(
                                 onTap: (){
-                                  Get.to(const TraceShape());
+                                  //Get.to(const TraceShape());
                                 },
                                 child: customCard("Trace Shape","Draw the shape with hand","assets/images/trace-shape.png"),
                               ),
@@ -126,13 +132,13 @@ class _HomePageState extends State<HomePage> {
 
    customCard(String str,String str2,String path){
     return  Padding(
-      padding: EdgeInsets.only(left:ScreenUtil().setSp(10),right: ScreenUtil().setSp(10),top:ScreenUtil().setSp(2)),
+      padding: EdgeInsets.only(left:((screenWidth/Responsive.designWidth) * 10),right: ((screenWidth/Responsive.designWidth) * 10)),
       child: Card(
         color: Colors.white,
         child: ListTile(
           leading: Container(
-            height: 200.h,
-            width: 150.w,
+            height: screenHeight * 0.2,
+            width: screenWidth * 0.15,
             decoration: BoxDecoration(
               color: Colors.transparent,
               image: DecorationImage(
@@ -142,7 +148,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           title: Text(str),
-          subtitle: Text(str2)
+          subtitle: Text(str2),
         ),
       ),
     );

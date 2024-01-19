@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:device_screen_recorder/device_screen_recorder.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:neuro_task/constant/responsive.dart';
 import 'package:neuro_task/pages/splash_screen.dart';
 import 'package:neuro_task/providers/memory_game_functions.dart';
 import 'package:neuro_task/pages/homepage.dart';
@@ -136,7 +137,7 @@ Future<void> stopScreenRecording() async{
     File files = File(file.toString());
     await storageReference.putFile(File(files.path));
     final downloadURL = await storageReference.getDownloadURL();
-    MemoryGameService.memoryGameVideoLink(downloadURL);
+    MemoryGameService.memoryGameScreenVideoLink(downloadURL);
     debugPrint('Video uploaded to Firebase Storage. Download URL: $downloadURL');
   } catch (e) {
       debugPrint('Error uploading video to Firebase Storage: $e');
@@ -161,9 +162,14 @@ Future<void> stopScreenRecording() async{
     super.dispose();
   }
   
+  double screenHeight = 0.0,screenWidth = 0.0;
 
   @override
   Widget build(BuildContext context) {
+    double height = Responsive.screenHeight(context);
+    double width = Responsive.screenWidth(context);
+    screenHeight = height;
+    screenWidth = width;
     return SafeArea(
       child: Scaffold(
         body: GestureDetector(
@@ -175,8 +181,8 @@ Future<void> stopScreenRecording() async{
             MemoryGameFunctions.screenPositionValue(details, context);
           },
           child: Container(
-            height: double.maxFinite.h,
-            width: double.maxFinite.w,
+            height: height * 1,
+            width: width * 1,
             color: Colors.white,
             child: Column(
               children: [
@@ -187,16 +193,16 @@ Future<void> stopScreenRecording() async{
                         onPressed: (){
                           Get.to(const HomePage());
                        },
-                       child: const Text("Back",
+                       child: Text("Back",
                        style: TextStyle(
-                          fontSize: 20,
-                          color: Color.fromARGB(166, 207, 207, 11),
+                          fontSize: (width / Responsive.designWidth) * 30,
+                          color: const Color.fromARGB(166, 207, 207, 11),
                          ),
                        )
                        ),
-                       Container(
-                      height: 100.h,
-                      width: 200.w,
+                     Container(
+                      height: height * 0.05,
+                      width: width * 0.1,
                       color: Colors.white,
                       child: (_isLoading) ? const Center(
                         child: CircularProgressIndicator(),
@@ -205,8 +211,8 @@ Future<void> stopScreenRecording() async{
                       ),
                      ),
                      Container(
-                      height: 80.h,
-                      width: 80.w,
+                      height: height * 0.08,
+                      width: width * 0.08,
                       decoration: const BoxDecoration(
                         color: Colors.deepPurple,
                         shape: BoxShape.circle
@@ -215,16 +221,29 @@ Future<void> stopScreenRecording() async{
                         child: (_isRecording)?const Icon(Icons.stop,color: Colors.white,) : const Icon(Icons.fiber_manual_record,color: Colors.white),
                       ),
                      ),
-                       TextButton(
+                     InkWell(
+                      onTap: (){
+                        MemoryGameStartMessage.startMessage(context);
+                      },
+                       child: Container(
+                        height: height * 0.05,
+                        width: width * 0.1,
+                        color: Colors.transparent,
+                        child: const FittedBox(
+                          child: Icon(CupertinoIcons.info,color: Color.fromARGB(166, 207, 207, 11),),
+                        ),
+                       ),
+                     ),
+                      TextButton(
                         onPressed: (){
                           _stopRecord();
                           stopScreenRecording();
                           Get.to(const HomePage());
                        },
-                       child: const Text("Submit",
+                       child: Text("Submit",
                        style: TextStyle(
-                            fontSize: 20,
-                            color: Color.fromARGB(166, 207, 207, 11),
+                            fontSize: (width/Responsive.designWidth) * 30,
+                            color: const Color.fromARGB(166, 207, 207, 11),
                             ),
                        )
                        ),
@@ -633,21 +652,22 @@ Future<void> stopScreenRecording() async{
   }
    Widget customCard(String path){
     return Container(
-        margin: EdgeInsets.only(top:40.h),
-        height: 450.h,
-        width: 300.w,  
+        margin: EdgeInsets.only(top: screenHeight * 0.01),
+        height: screenHeight * 0.2,
+        width: screenWidth * 0.3,  
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: Colors.transparent,
-          borderRadius: BorderRadius.all(Radius.circular(30.sp)),
+          borderRadius: BorderRadius.all(Radius.circular((screenWidth/Responsive.designWidth) * 20)),
           border: Border.all(
-            width: 5.sp,
+            width: screenWidth * 0.005,
           )
         ),
         child: Image(
-          height: 350.h,
-          width: 350.w,
-          image: AssetImage(path)
+          height: screenHeight * 0.13,
+          width: screenWidth * 0.23,
+          image: AssetImage(path),
+          fit: BoxFit.cover,
         ),
     );
   }

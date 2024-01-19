@@ -1,9 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:neuro_task/constant/my_text.dart';
+import 'package:neuro_task/constant/responsive.dart';
 import 'package:neuro_task/pages/authentication/login.dart';
 import 'package:neuro_task/pages/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,23 +36,25 @@ class _SplashScrenState extends State<SplashScren> {
 
   @override
   Widget build(BuildContext context) {
+    double height = Responsive.screenHeight(context);
+    double width = Responsive.screenWidth(context);
     return SafeArea(
       child: Scaffold(
         body: Container(
-          height: double.maxFinite.h,
-          width: double.maxFinite.w,
+          height: height * 1,
+          width: width * 1,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/splash_screen.jpg'),
+              image: AssetImage('assets/images/splash_screen.png'),
               fit: BoxFit.fill,
             ),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 600.h),
-              MyText(text: "Neuro Task", size: 100.sp, overflow: false, bold: true, color: Colors.white),
-              SizedBox(height: 50.h),
+              SizedBox(height: height* 0.6),
+              const MyText(text: "Neuro Task", size: 20,height: 0.05,width: 1, bold: true, color: Colors.white),
+              SizedBox(height: height * 0.02),
               const CircularProgressIndicator(color: Colors.white),
             ],
           ),

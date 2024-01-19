@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:neuro_task/constant/my_text.dart';
 import 'package:neuro_task/constant/passage.dart';
+import 'package:neuro_task/constant/responsive.dart';
 import 'package:neuro_task/pages/homepage.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:neuro_task/services/grandfatherpassage_services.dart';
+import 'package:neuro_task/ui/game/grandfatherpassage_start_message.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:just_audio/just_audio.dart';
@@ -72,37 +74,43 @@ class _GrandFatherRecordingState extends State<GrandFatherRecording> {
 
   Widget voiceIcon(){
     if(!_isRecording){
-      return Icon(
-        CupertinoIcons.waveform,
-        size: 150.sp,
-        color: Colors.white,
+      return Container(
+        height: screenHeight * 0.1,
+        width: screenWidth * 0.1,
+        color: Colors.transparent,
+        child: const FittedBox(
+          child: Icon(
+            CupertinoIcons.waveform,
+            color: Colors.white,
+          ),
+        ),
       );
     }
     else if(_latestReading!.maxDecibel>= 56 && _latestReading!.maxDecibel>= 70){
       return Icon(
         CupertinoIcons.speaker_1_fill,
-        size: 150.sp,
+        size: (screenWidth/Responsive.designWidth) * 40,
         color: Colors.green,
       );
     }
     else if(_latestReading!.maxDecibel> 70 && _latestReading!.maxDecibel>= 89){
       return Icon(
         CupertinoIcons.speaker_2_fill,
-        size: 150.sp,
+        size: (screenWidth/Responsive.designWidth) * 40,
         color: Colors.green,
       );
     }
     else if(_latestReading!.maxDecibel>= 90){
       return Icon(
         CupertinoIcons.volume_up,
-        size: 150.sp,
+        size: (screenWidth/Responsive.designWidth) * 40,
         color: Colors.green,
       );
     }
     else{
       return Icon(
         CupertinoIcons.volume_off,
-        size: 150.sp,
+        size: (screenWidth/Responsive.designWidth) * 40,
         color: Colors.red,
       );
     }
@@ -198,46 +206,66 @@ Future<void> _playRecordedAudio() async {
   }
 
   int count = 0;
-
+  double screenHeight = 0.0,screenWidth = 0.0;
   @override
   Widget build(BuildContext context) {
+    double height = Responsive.screenHeight(context);
+    double width = Responsive.screenWidth(context);
+    screenHeight = height;
+    screenWidth = width;
     return Container(
-      height: double.maxFinite.h,
-      width: double.maxFinite.w,
+      height: height * 1,
+      width: width * 1,
       color: Colors.transparent,
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Row(
+          Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
                   onPressed: (){
                     Get.to(const HomePage());
                   },
-                  child: const Text("Back",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Color.fromARGB(166, 207, 207, 11),
+                  child: Text("Back",
+                  style: TextStyle(
+                    fontSize: (width / Responsive.designWidth) * 30,
+                    color: const Color.fromARGB(166, 207, 207, 11),
                     ),
                   )
+                  ),
+                InkWell(
+                onTap: (){
+                  GrandFatherStartMessage.startMessage(context);
+                },
+                  child: Container(
+                  height: height * 0.05,
+                  width: width * 0.1,
+                  color: Colors.transparent,
+                  child: const FittedBox(
+                    child: Icon(CupertinoIcons.info,color: Color.fromARGB(166, 207, 207, 11),),
+                  ),
+                  ),
                 ),
                 TextButton(
                   onPressed: (){
-                    Get.to(const HomePage());
+                    _stopPlaying();
+                    if(_filePath != null && _filePath!.isNotEmpty){
+                      GrandFatherPassageServices.sendAudioToDatabase(_filePath!);
+                    }
                   },
-                  child: const Text("Submit",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Color.fromARGB(166, 207, 207, 11),
-                    ),
+                  child: Text("Submit",
+                  style: TextStyle(
+                      fontSize: (width/Responsive.designWidth) * 30,
+                      color: const Color.fromARGB(166, 207, 207, 11),
+                      ),
                   )
                 ),
               ],
             ),
-            SizedBox(height: 50.h),
-            MyText(text: "Grandfather Passage", size: 80.sp, overflow: false, bold: true, color: Colors.white),
-            SizedBox(height: 50.h),
+            SizedBox(height: height * 0.05),
+            const MyText(text: "Grandfather Passage", size: 20, bold: true, color: Colors.white,height: 0.05,width: 1),
+            SizedBox(height: height * 0.02),
             // Row(
             //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             //   children: [
@@ -273,20 +301,26 @@ Future<void> _playRecordedAudio() async {
             //   ],
             // ),
             (recordState) ? Container(
-              height: 1550.h,
-              width: double.maxFinite.w,
+              height: height * 0.9,
+              width: width * 1,
               color: Colors.transparent,
               child: Column(
                 children: [
-                  SizedBox(height: 100.h),
+                  SizedBox(height: height * 0.1),
                   Container(
-                    height: 1000.h,
-                    width: double.maxFinite.w,
+                    height:height * 0.4,
+                    width: width * 1,
                     color: Colors.transparent,
-                    margin: EdgeInsets.symmetric(horizontal: 30.w),
-                    child: MyText(text: Passage.myText, size: 60.sp, overflow: false, bold: false, color: Colors.white),
+                    margin: EdgeInsets.symmetric(horizontal: width * 0.03),
+                    child: Text(Passage.myText,
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: (width/Responsive.designWidth) * 30,
+                      ),
+                    )
                   ),
-                  SizedBox(height: 80.h),
+                  SizedBox(height: height * 0.06),
                   ElevatedButton(
                     onPressed: (){
                       setState(() {
@@ -294,8 +328,8 @@ Future<void> _playRecordedAudio() async {
                         recordState = false;
                         recorded = true;
                         second = 0;
-                        stop();
-                        stopNoise();
+                        //stop();
+                        //stopNoise();
                       });
                       setState(() {
                         
@@ -305,28 +339,30 @@ Future<void> _playRecordedAudio() async {
                       backgroundColor: MaterialStatePropertyAll(Colors.pink),
                     ),
                     child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 30.h,horizontal: 100.w),
-                      child: MyText(text: "Stop recording", size: 50.sp, overflow: false, bold: true, color: Colors.white)
+                      padding: EdgeInsets.symmetric(vertical: height * 0.015,horizontal: width * 0.05),
+                      child: const MyText(text: "Stop recording", size: 20, bold: true, color: Colors.white,height: 0.05,width: 0.4,)
                     ),
                   ),
                 ],
               ),
             )
             : Container(
+              height: height * 0.8,
+              width: width * 1,
               color: Colors.transparent,
               child: Column(
                 children: [
-                  SizedBox(height: 200.h),
+                  SizedBox(height: height * 0.2),
                   (recorded && (_filePath != null && _filePath!.isNotEmpty))? Container(
-                    height: 120.h,
-                    width: 900.w,
+                    height: height * 0.07,
+                    width: width * 0.8,
                     decoration: BoxDecoration(
                       color: Colors.white70,
-                      borderRadius: BorderRadius.all(Radius.circular(50.sp)),
+                      borderRadius: BorderRadius.all(Radius.circular((width/Responsive.designWidth) * 50)),
                     ),
                     child: Row(
                       children: [
-                        SizedBox(width: 30.w),
+                        SizedBox(width: width * 0.03),
                         GestureDetector(
                           onTap: (){
                             _isPlaying ? _stopPlaying() : _playRecordedAudio();
@@ -336,22 +372,22 @@ Future<void> _playRecordedAudio() async {
                           },
                           child: Icon(
                             (_isPlaying)? Icons.stop : Icons.play_arrow,
-                            size: 110.sp,
+                            size: (width/Responsive.designWidth) * 40,
                             color: Colors.black.withOpacity(0.8),
                           ),
                         ),
-                        SizedBox(width: 30.w),
-                        MyText(text: (_isPlaying ? "Playing...." : "Play audio"), size: 60.sp, overflow: false, bold: false, color: Colors.black),
+                        SizedBox(width: width * 0.03),
+                        MyText(text: (_isPlaying ? "Playing...." : "Play audio"), size: 30,bold: false, color: Colors.black,height: 0.04,width: 0.3,),
                       ],
                     ),
                   ) : Container(
-                    height: 200.h,
-                    width: 800.w,
+                    height: height * 0.1,
+                    width: width * 0.7,
                     color: Colors.transparent,
                   ),
-                  SizedBox(height: 300.h),
-                  MyText(text: "Record Audio", size: 70.sp, overflow: false, bold: true, color: Colors.white),
-                  SizedBox(height: 70.h),
+                  SizedBox(height: height * 0.03),
+                  const MyText(text: "Record Audio", size: 30,bold: true, color: Colors.white,height: 0.05,width: 1),
+                  SizedBox(height: height * 0.07),
                   GestureDetector(
                     onTap: (){
                       recordState = true;
@@ -362,8 +398,8 @@ Future<void> _playRecordedAudio() async {
                       setState(() {});
                     },
                     child: Container(
-                      height: 250.h,
-                      width: 250.w,
+                      height: height * 0.2,
+                      width: width * 0.2,
                       decoration: const BoxDecoration(
                         color: Colors.pink,
                         shape: BoxShape.circle,
@@ -372,7 +408,7 @@ Future<void> _playRecordedAudio() async {
                         child: Icon(
                           Icons.mic,
                           color: Colors.white,
-                          size: 120.sp,
+                          size: (width/Responsive.designWidth) * 50,
                         ),
                       ),
                     ),

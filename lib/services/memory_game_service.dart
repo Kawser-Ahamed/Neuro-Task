@@ -64,4 +64,11 @@ class MemoryGameService{
       'Camera Video' : videoLink,
     });
   }
+
+  static Future<void> memoryGameScreenVideoLink(String videoLink) async{
+    DateTime time = DateTime.now();
+    FirebaseFirestore.instance.collection('Games Video - $patientemail').doc('${time.toString()} - Memory Game').set({
+      'Screen Record Video' : videoLink,
+    });
+  }
 }
