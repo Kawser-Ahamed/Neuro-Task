@@ -2,7 +2,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:neuro_task/constant/my_text.dart';
 import 'package:neuro_task/constant/responsive.dart';
 //import 'package:neuro_task/constant/ip.dart';
 import 'package:neuro_task/pages/authentication/login.dart';
@@ -10,7 +9,7 @@ import 'package:neuro_task/pages/games/grandfather_passage.dart';
 import 'package:neuro_task/pages/games/memory_game.dart';
 //import 'package:http/http.dart' as http;
 import 'package:neuro_task/pages/games/narration.dart';
-import 'package:neuro_task/pages/games/trace_shape.dart';
+import 'package:neuro_task/pages/games/target_game.dart';
 import 'package:neuro_task/pages/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -91,19 +90,25 @@ class _HomePageState extends State<HomePage> {
                                 onTap: (){
                                   Get.to(const MemoryGame());
                                 },
-                                child: customCard("Memory Test","Flip the card to find all matching pairs of images","assets/images/card.jpg"),
+                                child: customCard("Memory Test","Flip the card to find all matching pairs of images","assets/images/card.png"),
                               ),
-                              GestureDetector(
-                                onTap: (){
-                                  //Get.to(const TraceShape());
-                                },
-                                child: customCard("Trace Shape","Draw the shape with hand","assets/images/trace-shape.png"),
-                              ),
+                              // GestureDetector(
+                              //   onTap: (){
+                              //     //Get.to(const TraceShape());
+                              //   },
+                              //   child: customCard("Trace Shape","Draw the shape with hand","assets/images/trace-shape.png"),
+                              // ),
                               GestureDetector(
                                 onTap: (){
                                   Get.to(const Narration());
                                 },
                                 child: customCard("Narration Reading","Read The Single Line Loudly","assets/images/narration.png"),
+                              ),
+                              GestureDetector(
+                                onTap: (){
+                                  Get.to(const TargetGame());
+                                },
+                                child: customCard("Target Game","Press on the target","assets/images/target.png"),
                               ),
                               TextButton(
                                 onPressed: () async{

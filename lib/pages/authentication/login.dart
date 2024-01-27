@@ -33,17 +33,17 @@ class _LoginState extends State<Login> {
           decoration: const BoxDecoration(
             color: Colors.white,
             image: DecorationImage(
-              image: AssetImage("assets/images/login_image.jpg"),
+              image: AssetImage("assets/images/login.jpg"),
               fit: BoxFit.fill,
             ),
           ),
           child: Column(
             children: [
-              SizedBox(height: height * 0.2),
-              const MyText(text: "Welcome To Neuro Task", size: 30, bold: true, color: Colors.white,height: 0.05,width: 1),
-              SizedBox(height:height * 0.02),
+              SizedBox(height: height * 0.25),
+              const MyText(text: "Welcome To Neuro Task", size: 30, bold: true, color: Colors.blue,height: 0.05,width: 1),
+              SizedBox(height:height * 0.01),
               MyTextField(width: 0.85, text: "Email", icon: Icons.mail, controller: email, check: false),
-              SizedBox(height: height * 0.02),
+              SizedBox(height: height * 0.01),
               MyTextField(width: 0.85, text: "Password", icon: Icons.key, controller: password, check: true),
               SizedBox(height: height * 0.01),
               InkWell(
@@ -58,11 +58,11 @@ class _LoginState extends State<Login> {
                 },
                 child: Container(
                   height: height * 0.06,
-                  width: width * 0.5,
+                  width: width * 0.83,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: Colors.lightBlue,
-                    borderRadius: BorderRadius.all(Radius.circular(width * 20))
+                    borderRadius: BorderRadius.all(Radius.circular((width/Responsive.designWidth) * 50))
                   ),
                   child: (LoginService.isLoading) ? const Center(child: CircularProgressIndicator(color: Colors.white,)) :
                   const MyText(text: "Login", size: 30, bold: false, color: Colors.white,height: 0.04,width: 0.2),
