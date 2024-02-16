@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:neuro_task/constant/responsive.dart';
 //import 'package:neuro_task/constant/ip.dart';
 import 'package:neuro_task/pages/authentication/login.dart';
+import 'package:neuro_task/pages/games/color_game.dart';
 import 'package:neuro_task/pages/games/grandfather_passage.dart';
 import 'package:neuro_task/pages/games/memory_game.dart';
 //import 'package:http/http.dart' as http;
@@ -109,6 +110,12 @@ class _HomePageState extends State<HomePage> {
                                   Get.to(const TargetGame());
                                 },
                                 child: customCard("Target Game","Press on the target","assets/images/target.png"),
+                              ),
+                              GestureDetector(
+                                onTap: (){
+                                  Get.to(const ColorGame());
+                                },
+                                child: customCard("Color Game","Read the color","assets/images/color_game.jpg"),
                               ),
                               TextButton(
                                 onPressed: () async{

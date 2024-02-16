@@ -8,7 +8,7 @@ class TargetGameServices{
     DateTime currentTime = DateTime.now();
     formattedTime = DateFormat('HH:mm:ss').format(currentTime);
     try{
-      FirebaseFirestore.instance.collection('Target Game - 1004 - $patientemail').doc('${currentTime.toString()} - patientId').set({
+      FirebaseFirestore.instance.collection('Target Game - 1004 - $patientemail').doc('${currentTime.toString()} - $patientId').set({
         'game_id' : '1004',
         'p_id' : patientId,
         'device_time' : formattedTime,
