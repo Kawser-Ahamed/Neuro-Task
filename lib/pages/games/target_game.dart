@@ -1,11 +1,11 @@
+import 'dart:async';
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:neuro_task/constant/responsive.dart';
 import 'package:neuro_task/pages/homepage.dart';
 import 'package:neuro_task/services/target_game_services.dart';
-import 'package:neuro_task/ui/game/game_start_message.dart';
+import 'package:neuro_task/ui/message/start_message.dart';
 
 class TargetGame extends StatefulWidget {
   const TargetGame({super.key});
@@ -32,15 +32,111 @@ class _TargetGameState extends State<TargetGame> {
     positionX = (0 + random.nextDouble() * (0.8 - 0));
     positionY = (0.1 + random.nextDouble() * (0.8 - 0.1));
   }
+
+  Timer? timer;
+  int second = 30;
+  void startTimer(){
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        second--;
+      });
+    });
+  }
+
+  showMyDialog(){
+    return showGeneralDialog(
+      transitionDuration: const Duration(milliseconds: 500),
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).dialogLabel,
+      context: context, 
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.5,
+              width: MediaQuery.of(context).size.width * 0.55,
+              color: Colors.white,
+              child: Card(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Text("Target Game",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: (width/Responsive.designWidth) * 40,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: height * 0.05),
+                    Padding(
+                      padding: EdgeInsets.only(left: width * 0.02),
+                      child: Text("Instruction",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: (width/Responsive.designWidth) * 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.02,vertical: height * 0.02),
+                      child: Text("Tap as many targets as you can in the given 30 seconds. Tap continue to begin and submit when you are done.",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: (width/Responsive.designWidth) * 30,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: height * 0.02),
+                    TextButton(
+                      onPressed: (){
+                        startTimer();
+                        Navigator.pop(context);
+                      }, 
+                      child: Text("Continue",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: (width/Responsive.designWidth) * 40,
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromARGB(166, 207, 207, 11),
+                      ),
+                    ),
+                    ),
+                    // SizedBox(height: height * 0.01),
+                    // InkWell(
+                    //   onTap:(){
+                        
+                    //   },
+                    //   child: Icon(Icons.keyboard_arrow_up,
+                    //     size: (width/Responsive.designWidth) * 50,
+                    //   ),
+                    // ),
+                  ],
+                ),
+              )
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  double height = 0.0;
+  double width = 0.0;
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showMyDialog();
+    });
     getRandomPosition();
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    double height = Responsive.screenHeight(context);
-    double width = Responsive.screenWidth(context);
+    height = Responsive.screenHeight(context);
+    width = Responsive.screenWidth(context);
     return Scaffold(
       body: GestureDetector(
         onTapUp: (TapUpDetails details) {
@@ -77,28 +173,17 @@ class _TargetGameState extends State<TargetGame> {
                         Get.to(const HomePage());
                       },
                       child: Text("Back",
-                      style: TextStyle(
-                        fontSize: (width / Responsive.designWidth) * 30,
-                        color: const Color.fromARGB(166, 207, 207, 11),
+                        style: TextStyle(
+                          fontSize: (width / Responsive.designWidth) * 30,
+                          color: const Color.fromARGB(166, 207, 207, 11),
                         ),
                       )
-                      ),
-                    InkWell(
-                    onTap: (){
-                      GameStartMessage.startMessage(context,"Target Game","");
-                    },
-                      child: Container(
-                      height: height * 0.05,
-                      width: width * 0.1,
-                      margin: EdgeInsets.only(bottom: height * 0.005),
-                      color: Colors.transparent,
-                      child: const FittedBox(
-                        child: Icon(CupertinoIcons.info,color: Color.fromARGB(166, 207, 207, 11),),
-                      ),
-                      ),
                     ),
+                    const StartMessage(gameName: 'Target Game',
+                    description: "Tap as many targets as you can in the given 30 seconds. Tap continue to begin and submit when you are done."),
                     TextButton(
                       onPressed: (){
+                        timer!.cancel();
                         Get.to(const HomePage());
                       },
                       child: Text("Submit",
@@ -111,7 +196,24 @@ class _TargetGameState extends State<TargetGame> {
                   ],
                 ),
               ),
-              GestureDetector(
+              Center(
+                child: (second>=0) ? Text(second.toString(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: (width/Responsive.designWidth) * 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black
+                  ),
+                ) : Text("0",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: (width/Responsive.designWidth) * 40,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black
+                  ),
+                ),
+              ),
+              (second>=0) ?               GestureDetector(
                 //behavior: HitTestBehavior.translucent,
                 onTapUp: (TapUpDetails details) {
                   debugPrint('Container Position: (${(positionX*width)+(height * circleSize.values.elementAt(index))} ${(positionY*height)+(height * circleSize.values.elementAt(index))})');
@@ -162,7 +264,7 @@ class _TargetGameState extends State<TargetGame> {
                     ),
                   ),
                 ),
-              ),
+              ) : Container(),
             ],
           ),
         ),

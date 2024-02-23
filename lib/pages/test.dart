@@ -1,106 +1,53 @@
-// import 'package:flutter/material.dart';
-// import 'package:speech_to_text/speech_to_text.dart' as stt;
-// import 'package:flutter_sound/flutter_sound.dart';
-// import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/material.dart';
 
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
 
-// class VoiceRecorderPage extends StatefulWidget {
-//   @override
-//   _VoiceRecorderPageState createState() => _VoiceRecorderPageState();
-// }
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
 
-// class _VoiceRecorderPageState extends State<VoiceRecorderPage> {
-//   final stt.SpeechToText _speechToText = stt.SpeechToText();
-//   final FlutterSoundRecorder _recorder = FlutterSoundRecorder();
-//   String _recognizedText = 'Empty';
-//   bool _isRecording = false;
-//   bool _isSpeechToTextEnabled = false;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _initialize();
-//   }
-
-//   Future<void> _initialize() async {
-//     _isSpeechToTextEnabled = await _speechToText.initialize();
-//     await Permission.microphone.request();
-//     await Permission.storage.request();
-//     await _recorder.openRecorder();
-//   }
-
-//   Future<void> _startRecording() async {
-//     setState(() {
-//       _isRecording = true;
-//     });
-//     await _recorder.startRecorder(toFile: 'test.aac', codec: Codec.aacMP4);
-//   }
-
-//   Future<void> _stopRecording() async {
-//     setState(() {
-//       _isRecording = false;
-//     });
-//     await _recorder.stopRecorder();
-//     await _recognizeSpeech();
-//   }
-
-//   Future<void> _recognizeSpeech() async {
-//     if (!_isSpeechToTextEnabled) {
-//       print('Speech to text is not available');
-//       return;
-//     }
-
-//     final stt.SpeechToText _speech = stt.SpeechToText();
-//     bool available = await _speech.initialize();
-//     if (available) {
-//       _speech.listen(
-//         onResult: (result) {
-//           setState(() {
-//             _recognizedText = result.recognizedWords;
-//           });
-//         },
-//       );
-//     } else {
-//       print('The user has denied the use of speech recognition');
-//     }
-//   }
-
-//   @override
-//   void dispose() {
-//     _recorder.closeRecorder();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Voice Recorder & Speech to Text'),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: <Widget>[
-//             _isRecording
-//                 ? Text('Recording...')
-//                 : Text('Press button to start recording'),
-//             SizedBox(height: 20),
-//             _isRecording
-//                 ? ElevatedButton(
-//                     onPressed: _stopRecording,
-//                     child: Text('Stop Recording'),
-//                   )
-//                 : ElevatedButton(
-//                     onPressed: _startRecording,
-//                     child: Text('Start Recording'),
-//                   ),
-//             SizedBox(height: 20),
-//             Text('Recognized Text:', style: TextStyle(fontSize: 16)),
-//             SizedBox(height: 10),
-//             Text(_recognizedText, style: TextStyle(fontSize: 20)),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          height: double.infinity,
+          width: double.infinity,
+          color: Colors.white,
+          child: Column(
+            children: [
+              InkWell(
+                onTap: (){
+                  showGeneralDialog(
+                    barrierDismissible: true,
+                    barrierLabel: MaterialLocalizations.of(context).dialogLabel,
+                    context: context, 
+                    pageBuilder: (context, animation, secondaryAnimation) {
+                      return Column(
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.5,
+                            width: MediaQuery.of(context).size.width * 0.52,
+                            margin: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.03),
+                            color: Colors.blue,
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: Container(
+                  height: 50,
+                  width: 200,
+                  color: Colors.red,
+                ),
+              ),
+            ],
+          )
+        )
+      ),
+    );
+  }
+}

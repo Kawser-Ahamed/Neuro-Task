@@ -86,7 +86,7 @@ class _LoginState extends State<Login> {
                            Get.snackbar(
                               "Neuro Task",
                               "Please enter your email and try again",
-                              snackPosition: SnackPosition.BOTTOM,
+                              snackPosition: SnackPosition.TOP,
                             );
                           Navigator.pop(context);
                         }
@@ -95,7 +95,7 @@ class _LoginState extends State<Login> {
                             Get.snackbar(
                               "Neuro Task",
                               "We have send you a email to reset password. Please check it.",
-                              snackPosition: SnackPosition.BOTTOM,
+                              snackPosition: SnackPosition.TOP,
                             );
                             Navigator.pop(context);
                             resetEmail.clear();
@@ -103,7 +103,7 @@ class _LoginState extends State<Login> {
                             Get.snackbar(
                               "Neuro Task", 
                               "Server is busy",
-                              snackPosition: SnackPosition.BOTTOM
+                              snackPosition: SnackPosition.TOP
                             );
                           });
                         }
