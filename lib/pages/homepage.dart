@@ -10,6 +10,7 @@ import 'package:neuro_task/pages/games/grandfather_passage.dart';
 import 'package:neuro_task/pages/games/memory_game.dart';
 //import 'package:http/http.dart' as http;
 import 'package:neuro_task/pages/games/narration.dart';
+import 'package:neuro_task/pages/games/picture_test.dart';
 import 'package:neuro_task/pages/games/target_game.dart';
 import 'package:neuro_task/pages/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -115,7 +116,13 @@ class _HomePageState extends State<HomePage> {
                                 onTap: (){
                                   Get.to(const ColorGame());
                                 },
-                                child: customCard("Color Game","Read the color","assets/images/color_game.jpg"),
+                                child: customCard("Color Test","Read the color","assets/images/color_game.jpg"),
+                              ),
+                              GestureDetector(
+                                onTap: (){
+                                  Get.to(const PictureTest());
+                                },
+                                child: customCard("Picture Test","Say the word that best corresponds to the picture shown.","assets/images/umbrella.png"),
                               ),
                               TextButton(
                                 onPressed: () async{

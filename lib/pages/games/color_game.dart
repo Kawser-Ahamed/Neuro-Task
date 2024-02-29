@@ -255,7 +255,7 @@ class _ColorGameState extends State<ColorGame> {
               ],
             ),
           ),
-          Text(voiceToText),
+          //Text(voiceToText),
           (currentIndex!=-1)? Padding(
             padding: EdgeInsets.only(left: (width * positionX),top: height * positionY),
             child: Text(colorMap.keys.elementAt(currentIndex),

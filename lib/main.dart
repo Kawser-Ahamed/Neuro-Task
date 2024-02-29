@@ -27,7 +27,7 @@ class NeuroTask extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.deepPurple,
           ),
-          home: const SplashScren(),
+          home: const SplashScreen(),
           debugShowCheckedModeBanner: false,
         );
       },

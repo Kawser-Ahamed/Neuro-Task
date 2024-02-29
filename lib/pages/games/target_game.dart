@@ -213,7 +213,7 @@ class _TargetGameState extends State<TargetGame> {
                   ),
                 ),
               ),
-              (second>=0) ?               GestureDetector(
+              (second>=0) ? GestureDetector(
                 //behavior: HitTestBehavior.translucent,
                 onTapUp: (TapUpDetails details) {
                   debugPrint('Container Position: (${(positionX*width)+(height * circleSize.values.elementAt(index))} ${(positionY*height)+(height * circleSize.values.elementAt(index))})');
