@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:device_screen_recorder/device_screen_recorder.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:neuro_task/constant/responsive.dart';
@@ -12,7 +11,7 @@ import 'package:neuro_task/providers/memory_game_functions.dart';
 import 'package:neuro_task/pages/homepage.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:neuro_task/services/memory_game_service.dart';
-import 'package:neuro_task/ui/game/memory_game_start_message.dart';
+import 'package:neuro_task/ui/message/start_message.dart';
 import 'package:path_provider/path_provider.dart';
 
 
@@ -52,6 +51,7 @@ class _MemoryGameState extends State<MemoryGame> {
   int success = 0;
   
   late CameraController _cameraController;
+  // ignore: unused_field
   bool _isLoading = true;
   bool _isRecording = false;
 
@@ -144,6 +144,75 @@ Future<void> stopScreenRecording() async{
   }
 
 }
+
+startMessage(){
+    return showGeneralDialog(
+      transitionDuration: const Duration(milliseconds: 500),
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).dialogLabel,
+      context: context, 
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.55,
+              color: Colors.white,
+              child: Card(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Text("Memory Game",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: (width/Responsive.designWidth) * 40,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: height * 0.05),
+                    Padding(
+                      padding: EdgeInsets.only(left: width * 0.02),
+                      child: Text("Instruction",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: (width/Responsive.designWidth) * 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.02,vertical: height * 0.02),
+                      child: Text("Flip cards (two at a time) to find all matching pairs of images in as few taps as possible. Tap continue to start and submit when you are done.",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: (width/Responsive.designWidth) * 30,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: height * 0.02),
+                    TextButton(
+                      onPressed: (){
+                        Navigator.pop(context);
+                      }, 
+                      child: Text("Continue",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: (width/Responsive.designWidth) * 40,
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromARGB(166, 207, 207, 11),
+                      ),
+                    ),
+                    ),
+                  ],
+                ),
+              )
+            ),
+          ],
+        );
+      },
+    );
+  }
   
   
   @override
@@ -151,7 +220,7 @@ Future<void> stopScreenRecording() async{
     _initCamera();
     startScreenRecording();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      MemoryGameStartMessage.startMessage(context);
+      startMessage();
     });
     super.initState();
   }
@@ -162,14 +231,12 @@ Future<void> stopScreenRecording() async{
     super.dispose();
   }
   
-  double screenHeight = 0.0,screenWidth = 0.0;
+  double height = 0.0,width = 0.0;
 
   @override
   Widget build(BuildContext context) {
-    double height = Responsive.screenHeight(context);
-    double width = Responsive.screenWidth(context);
-    screenHeight = height;
-    screenWidth = width;
+    height = Responsive.screenHeight(context);
+    width = Responsive.screenWidth(context);
     return SafeArea(
       child: Scaffold(
         body: GestureDetector(
@@ -186,76 +253,72 @@ Future<void> stopScreenRecording() async{
             color: Colors.white,
             child: Column(
               children: [
-                Row(
+                Container(
+                  height: height * 0.1,
+                  width: width * 1,
+                  color: Colors.white,
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       TextButton(
                         onPressed: (){
                           Get.to(const HomePage());
-                       },
-                       child: Text("Back",
-                       style: TextStyle(
+                        },
+                        child: Text("Back",
+                        style: TextStyle(
                           fontSize: (width / Responsive.designWidth) * 30,
                           color: const Color.fromARGB(166, 207, 207, 11),
-                         ),
-                       )
-                       ),
-                     Container(
-                      height: height * 0.05,
-                      width: width * 0.1,
-                      color: Colors.white,
-                      child: (_isLoading) ? const Center(
-                        child: CircularProgressIndicator(),
-                      ) : CameraPreview(
-                        _cameraController,
-                      ),
-                     ),
-                     Container(
-                      height: height * 0.08,
-                      width: width * 0.08,
-                      decoration: const BoxDecoration(
-                        color: Colors.deepPurple,
-                        shape: BoxShape.circle
-                      ),
-                      child: Center(
-                        child: (_isRecording)?const Icon(Icons.stop,color: Colors.white,) : const Icon(Icons.fiber_manual_record,color: Colors.white),
-                      ),
-                     ),
-                     InkWell(
-                      onTap: (){
-                        MemoryGameStartMessage.startMessage(context);
-                      },
-                       child: Container(
-                        height: height * 0.05,
-                        width: width * 0.1,
-                        color: Colors.transparent,
-                        child: const FittedBox(
-                          child: Icon(CupertinoIcons.info,color: Color.fromARGB(166, 207, 207, 11),),
+                          ),
+                        )
                         ),
-                       ),
-                     ),
+                      // Container(
+                      //   height: height * 0.05,
+                      //   width: width * 0.1,
+                      //   color: Colors.white,
+                      //   child: (_isLoading) ? const Center(
+                      //     child: CircularProgressIndicator(),
+                      //   ) : CameraPreview(
+                      //     _cameraController,
+                      //   ),
+                      // ),
+                      // Container(
+                      //   height: height * 0.08,
+                      //   width: width * 0.08,
+                      //   decoration: const BoxDecoration(
+                      //     color: Colors.deepPurple,
+                      //     shape: BoxShape.circle
+                      //   ),
+                      //   child: Center(
+                      //     child: (_isRecording)?const Icon(Icons.stop,color: Colors.white,) : const Icon(Icons.fiber_manual_record,color: Colors.white),
+                      //   ),
+                      // ),
+                      const StartMessage(
+                        gameName: 'Memory Game',
+                        description: "Flip cards (two at a time) to find all matching pairs of images in as few taps as possible. Tap continue to start and submit when you are done."
+                      ),
                       TextButton(
                         onPressed: (){
                           _stopRecord();
                           stopScreenRecording();
                           Get.to(const HomePage());
-                       },
-                       child: Text("Submit",
-                       style: TextStyle(
+                        },
+                        child: Text("Submit",
+                        style: TextStyle(
                             fontSize: (width/Responsive.designWidth) * 30,
                             color: const Color.fromARGB(166, 207, 207, 11),
                             ),
-                       )
-                       ),
+                        )
+                        ),
                     ],
                   ),
+                ),
                 //Flip Card
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       GestureDetector(
                         onTapUp: (TapUpDetails details) {
-                           MemoryGameFunctions.cardPositionValue(details);
+                           MemoryGameFunctions.cardPositionValue(details,context);
                            MemoryGameFunctions.findTime();
                           },
                           onTap: (){ 
@@ -283,7 +346,7 @@ Future<void> stopScreenRecording() async{
                         ),
                       GestureDetector(
                         onTapUp: (TapUpDetails details) {
-                            MemoryGameFunctions.cardPositionValue(details);
+                            MemoryGameFunctions.cardPositionValue(details,context);
                             MemoryGameFunctions.findTime();
                           },
                           onTap: (){
@@ -311,7 +374,7 @@ Future<void> stopScreenRecording() async{
                       ),
                       GestureDetector(
                         onTapUp: (TapUpDetails details) {
-                            MemoryGameFunctions.cardPositionValue(details);
+                            MemoryGameFunctions.cardPositionValue(details,context);
                             MemoryGameFunctions.findTime();
                           },
                           onTap: (){
@@ -345,7 +408,7 @@ Future<void> stopScreenRecording() async{
                     children: [
                       GestureDetector(
                         onTapUp: (TapUpDetails details) {
-                            MemoryGameFunctions.cardPositionValue(details);
+                            MemoryGameFunctions.cardPositionValue(details,context);
                             MemoryGameFunctions.findTime();
                           },
                           onTap: (){
@@ -373,7 +436,7 @@ Future<void> stopScreenRecording() async{
                       ),
                       GestureDetector(
                         onTapUp: (TapUpDetails details) {
-                            MemoryGameFunctions.cardPositionValue(details);
+                            MemoryGameFunctions.cardPositionValue(details,context);
                             MemoryGameFunctions.findTime();
                           },
                           onTap: (){
@@ -401,7 +464,7 @@ Future<void> stopScreenRecording() async{
                       ),
                       GestureDetector(
                         onTapUp: (TapUpDetails details) {
-                            MemoryGameFunctions.cardPositionValue(details);
+                            MemoryGameFunctions.cardPositionValue(details,context);
                             MemoryGameFunctions.findTime();
                           },
                           onTap: (){
@@ -434,7 +497,7 @@ Future<void> stopScreenRecording() async{
                     children: [
                       GestureDetector(
                         onTapUp: (TapUpDetails details) {
-                            MemoryGameFunctions.cardPositionValue(details);
+                            MemoryGameFunctions.cardPositionValue(details,context);
                             MemoryGameFunctions.findTime();
                           },
                           onTap: (){
@@ -462,7 +525,7 @@ Future<void> stopScreenRecording() async{
                       ),
                       GestureDetector(
                         onTapUp: (TapUpDetails details) {
-                            MemoryGameFunctions.cardPositionValue(details);
+                            MemoryGameFunctions.cardPositionValue(details,context);
                             MemoryGameFunctions.findTime();
                           },
                           onTap: (){
@@ -490,7 +553,7 @@ Future<void> stopScreenRecording() async{
                       ),
                       GestureDetector(
                         onTapUp: (TapUpDetails details) {
-                          MemoryGameFunctions.cardPositionValue(details);
+                          MemoryGameFunctions.cardPositionValue(details,context);
                           MemoryGameFunctions.findTime();
                         },
                         onTap: (){
@@ -523,7 +586,7 @@ Future<void> stopScreenRecording() async{
                     children: [
                       GestureDetector(
                         onTapUp: (TapUpDetails details) {
-                            MemoryGameFunctions.cardPositionValue(details);
+                            MemoryGameFunctions.cardPositionValue(details,context);
                             MemoryGameFunctions.findTime();
                           },
                           onTap: (){
@@ -551,7 +614,7 @@ Future<void> stopScreenRecording() async{
                       ),
                       GestureDetector(
                         onTapUp: (TapUpDetails details) {
-                            MemoryGameFunctions.cardPositionValue(details);
+                            MemoryGameFunctions.cardPositionValue(details,context);
                             MemoryGameFunctions.findTime();
                           },
                           onTap: (){
@@ -579,7 +642,7 @@ Future<void> stopScreenRecording() async{
                       ),
                       GestureDetector(
                         onTapUp: (TapUpDetails details) {
-                            MemoryGameFunctions.cardPositionValue(details);
+                            MemoryGameFunctions.cardPositionValue(details,context);
                             MemoryGameFunctions.findTime();
                           },
                           onTap: (){
@@ -652,20 +715,20 @@ Future<void> stopScreenRecording() async{
   }
    Widget customCard(String path){
     return Container(
-        margin: EdgeInsets.only(top: screenHeight * 0.01),
-        height: screenHeight * 0.2,
-        width: screenWidth * 0.3,  
+        margin: EdgeInsets.only(top: height * 0.01),
+        height: height * 0.2,
+        width: width * 0.3,  
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: Colors.transparent,
-          borderRadius: BorderRadius.all(Radius.circular((screenWidth/Responsive.designWidth) * 20)),
+          borderRadius: BorderRadius.all(Radius.circular((width/Responsive.designWidth) * 20)),
           border: Border.all(
-            width: screenWidth * 0.005,
+            width: width * 0.005,
           )
         ),
         child: Image(
-          height: screenHeight * 0.13,
-          width: screenWidth * 0.23,
+          height: height * 0.13,
+          width: width * 0.23,
           image: AssetImage(path),
           fit: BoxFit.cover,
         ),

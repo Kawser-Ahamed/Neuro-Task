@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:neuro_task/constant/my_text.dart';
 import 'package:neuro_task/constant/responsive.dart';
 import 'package:neuro_task/ui/game/narration_recording.dart';
-import 'package:neuro_task/ui/game/narration_start_message.dart';
 
 class Narration extends StatefulWidget {
   const Narration({super.key});
@@ -39,11 +38,7 @@ class _NarrationState extends State<Narration> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      InkWell(
-                        onTap: (){
-                          NarrationStartMessage.startMessage(context);
-                        },
-                        child: const MyText(text: "Instruction", size: 30, bold: true, color: Colors.white,height: 0.05,width: 0.3)),
+                      const MyText(text: "Narration", size: 30, bold: true, color: Colors.white,height: 0.05,width: 0.3),
                       Icon(
                         CupertinoIcons.speaker_2_fill,
                         size:  width * 0.08,
@@ -52,7 +47,7 @@ class _NarrationState extends State<Narration> {
                     ],
                   ),
                   SizedBox(height: height * 0.1),
-                  const MyText(text: "Read the passage loudly", size:30, bold: false, color: Colors.white,height: 0.05,width: 0.7,),
+                  const MyText(text: "Read the sentence shown aloud", size:30, bold: false, color: Colors.white,height: 0.05,width: 0.7,),
                   SizedBox(height: height * 0.1),
                   ElevatedButton(
                     onPressed: (){

@@ -86,13 +86,13 @@ class _HomePageState extends State<HomePage> {
                                 onTap: (){
                                   Get.to(const GrandFatherPassage());
                                 },
-                                child: customCard("Grandfather Passage","Read the passage with voice","assets/images/grandfather.jpg"),
+                                child: customCard("Grandfather Passage","Read the passage shown aloud.","assets/images/grandfather.jpg"),
                               ),
                               GestureDetector(
                                 onTap: (){
                                   Get.to(const MemoryGame());
                                 },
-                                child: customCard("Memory Test","Flip the card to find all matching pairs of images","assets/images/card.png"),
+                                child: customCard("Memory Test","Flip the card to find all matching pairs of images.","assets/images/card.png"),
                               ),
                               // GestureDetector(
                               //   onTap: (){
@@ -104,19 +104,19 @@ class _HomePageState extends State<HomePage> {
                                 onTap: (){
                                   Get.to(const Narration());
                                 },
-                                child: customCard("Narration Reading","Read The Single Line Loudly","assets/images/narration.png"),
+                                child: customCard("Narration Reading","Read the sentence shown aloud.","assets/images/narration.png"),
                               ),
                               GestureDetector(
                                 onTap: (){
                                   Get.to(const TargetGame());
                                 },
-                                child: customCard("Target Game","Press on the target","assets/images/target.png"),
+                                child: customCard("Target Game","Tap on the targets shown.","assets/images/target.png"),
                               ),
                               GestureDetector(
                                 onTap: (){
                                   Get.to(const ColorGame());
                                 },
-                                child: customCard("Color Test","Read the color","assets/images/color_game.jpg"),
+                                child: customCard("Color Test","Say the color of each word.","assets/images/color_game.jpg"),
                               ),
                               GestureDetector(
                                 onTap: (){

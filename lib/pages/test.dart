@@ -1,94 +1,55 @@
-// import 'dart:io';
-// import 'package:flutter/material.dart';
-// import 'package:speech_to_text/speech_to_text.dart' as stt;
-// import 'package:audio_recorder/audio_recorder.dart';
-// import 'package:path_provider/path_provider.dart';
+import 'dart:convert';
+import 'dart:io';
 
-// void main() {
-//   runApp(MyApp());
-// }
+import 'package:deepgram_speech_to_text/deepgram_speech_to_text.dart';
+import 'package:flutter/material.dart';
+import 'package:neuro_task/constant/responsive.dart';
 
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: VoiceToTextScreen(),
-//     );
-//   }
-// }
+class Test extends StatefulWidget {
+  const Test({super.key});
 
-// class VoiceToTextScreen extends StatefulWidget {
-//   @override
-//   _VoiceToTextScreenState createState() => _VoiceToTextScreenState();
-// }
+  @override
+  State<Test> createState() => _TestState();
+}
 
-// class _VoiceToTextScreenState extends State<VoiceToTextScreen> {
-//   stt.SpeechToText _speechToText = stt.SpeechToText();
-//   bool _isListening = false;
-//   String _text = '';
+class _TestState extends State<Test> {
+  
+  String text = 'empty';
+  Future <void> getText() async{
+    String apiKey = "0a8bc449c65e40b5b9e4cbfd553ba7dd56ae805f";
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Voice to Text'),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Text(_text),
-//             ElevatedButton(
-//               onPressed: _toggleRecording,
-//               child: _isListening ? Text('Stop Recording') : Text('Start Recording'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
+    Deepgram deepgram = Deepgram(apiKey);
 
-//   void _toggleRecording() async {
-//     if (!_isListening) {
-//       if (await AudioRecorder.hasPermissions) {
-//         Directory appDocDirectory = await getApplicationDocumentsDirectory();
-//         String filePath = '${appDocDirectory.path}/recording.wav';
-
-//         await AudioRecorder.start(
-//           path: filePath,
-//           audioOutputFormat: AudioOutputFormat.WAV,
-//         );
-
-//         if (await AudioRecorder.isRecording) {
-//           setState(() {
-//             _isListening = true;
-//           });
-
-//           _speechToText.listen(
-//             onResult: (result) {
-//               setState(() {
-//                 _text = result.recognizedWords;
-//               });
-//             },
-//             listenFor: Duration(seconds: 30),
-//             localeId: 'en_US',
-//           );
-//         }
-//       } else {
-//         print('Permissions not granted');
-//       }
-//     } else {
-//       setState(() {
-//         _isListening = false;
-//         _speechToText.stop();
-//         AudioRecorder.stop();
-//       });
-//     }
-//   }
-
-//   @override
-//   void dispose() {
-//     _speechToText.stop();
-//     super.dispose();
-//   }
-// }
+    File audioFile = File('/storage/emulated/0/Android/data/com.example.neuro_task/files/recording.aac');
+    
+    String json  = await deepgram.transcribeFromFile(audioFile);
+    Map<String, dynamic> data = jsonDecode(json);
+    text = data['results']['channels'][0]['alternatives'][0]['transcript'];
+  }
+  @override
+  Widget build(BuildContext context) {
+    double height = Responsive.screenHeight(context);
+    double width = Responsive.screenWidth(context);
+    return Scaffold(
+      body: SizedBox(
+        height: height,
+        width: width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(text),
+            ElevatedButton(
+              onPressed: (){
+                getText().whenComplete((){
+                  setState(() {});
+                });
+              }, 
+              child: const Text('press me'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

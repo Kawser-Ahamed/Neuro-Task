@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:neuro_task/constant/my_text.dart';
 import 'package:neuro_task/constant/responsive.dart';
 import 'package:neuro_task/pages/authentication/login.dart';
 import 'package:neuro_task/pages/homepage.dart';
@@ -18,7 +17,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
-   @override
+  @override
   void initState() {
     getValidation().whenComplete((){
       Timer(const Duration(seconds: 2), () { 
@@ -43,21 +42,59 @@ class _SplashScreenState extends State<SplashScreen> {
         body: Container(
           height: height * 1,
           width: width * 1,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/splash_screen.png'),
-              fit: BoxFit.fill,
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          color: Colors.white,
+          child: Stack(
             children: [
-              SizedBox(height: height* 0.6),
-              const MyText(text: "Neuro Task", size: 20,height: 0.05,width: 1, bold: true, color: Colors.white),
-              SizedBox(height: height * 0.02),
-              const CircularProgressIndicator(color: Colors.white),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: height * 0.4,
+                child: Material(
+                  color: Colors.deepPurple,
+                  borderRadius: BorderRadius.only(bottomRight: Radius.circular((width/Responsive.designWidth)*100)),
+                  child: FittedBox(
+                    child: Padding(
+                      padding: EdgeInsets.all(width * 0.2),
+                      child: Image.asset('assets/images/splash_screen_main.png'),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: height * 0.55,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: const Material(
+                  color: Colors.deepPurple,
+                ),
+              ),
+              Positioned(
+                top: height * 0.55,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Material(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular((width/Responsive.designWidth)*100)),
+                  child: Column(
+                    mainAxisAlignment:MainAxisAlignment.center,
+                    children: [
+                      Text("Neuro Task",
+                        style: TextStyle(
+                          fontSize: (width/Responsive.designWidth)*50,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: height * 0.05),
+                      const CircularProgressIndicator(),
+                    ],
+                  ),
+                ),
+              ),
             ],
-          ),
+          )
         ),
       )
     );

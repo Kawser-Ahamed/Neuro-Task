@@ -43,7 +43,7 @@ class _TargetGameState extends State<TargetGame> {
     });
   }
 
-  showMyDialog(){
+  startMessage(){
     return showGeneralDialog(
       transitionDuration: const Duration(milliseconds: 500),
       barrierDismissible: false,
@@ -128,7 +128,7 @@ class _TargetGameState extends State<TargetGame> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      showMyDialog();
+      startMessage();
     });
     getRandomPosition();
     super.initState();
@@ -179,8 +179,10 @@ class _TargetGameState extends State<TargetGame> {
                         ),
                       )
                     ),
-                    const StartMessage(gameName: 'Target Game',
-                    description: "Tap as many targets as you can in the given 30 seconds. Tap continue to begin and submit when you are done."),
+                    const StartMessage(
+                      gameName: 'Target Game',
+                      description: "Tap as many targets as you can in the given 30 seconds. Tap continue to begin and submit when you are done."
+                    ),
                     TextButton(
                       onPressed: (){
                         timer!.cancel();

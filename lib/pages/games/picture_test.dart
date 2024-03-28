@@ -1,11 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
-
+import 'package:deepgram_speech_to_text/deepgram_speech_to_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
 import 'package:neuro_task/constant/responsive.dart';
 import 'package:neuro_task/pages/homepage.dart';
+import 'package:neuro_task/services/picture_test_services.dart';
 import 'package:neuro_task/ui/message/start_message.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class PictureTest extends StatefulWidget {
   const PictureTest({super.key});
@@ -16,7 +22,7 @@ class PictureTest extends StatefulWidget {
 
 class _PictureTestState extends State<PictureTest> {
 
-  showMyDialog(){
+  startMessage(){
     return showGeneralDialog(
       transitionDuration: const Duration(milliseconds: 500),
       barrierDismissible: false,
@@ -27,7 +33,6 @@ class _PictureTestState extends State<PictureTest> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              height: MediaQuery.of(context).size.height * 0.5,
               width: MediaQuery.of(context).size.width * 0.55,
               color: Colors.white,
               child: Card(
@@ -65,6 +70,8 @@ class _PictureTestState extends State<PictureTest> {
                     SizedBox(height: height * 0.02),
                     TextButton(
                       onPressed: (){
+                        _startRecording();
+                        _startSubRecording();
                         startTimer();
                         Navigator.pop(context);
                       }, 
@@ -77,18 +84,9 @@ class _PictureTestState extends State<PictureTest> {
                       ),
                     ),
                     ),
-                    // SizedBox(height: height * 0.01),
-                    // InkWell(
-                    //   onTap:(){
-                        
-                    //   },
-                    //   child: Icon(Icons.keyboard_arrow_up,
-                    //     size: (width/Responsive.designWidth) * 50,
-                    //   ),
-                    // ),
                   ],
                 ),
-              )
+              ),
             ),
           ],
         );
@@ -112,6 +110,22 @@ class _PictureTestState extends State<PictureTest> {
     "assets/images/cangaroo.jpg",
   ];
 
+  List<String> pictureName = [
+    'Banana',
+    'Piano',
+    'girafee',
+    'Flamingo',
+    'Strawbery',
+    'TriCycle',
+    'Umbrella',
+    'Diamond',
+    'Tomato',
+    'Elephant',
+    'Pinaple',
+    'Calculator',
+    'Cangaroo',
+  ];
+
   int secondCount = 0;
   int index = 0;
   int currentIndex = 0;
@@ -133,21 +147,23 @@ class _PictureTestState extends State<PictureTest> {
         currentIndex = -1;
         if(index < pictureList.length){
           index++;
-          //stopSpeechRecord();
-          //ColorGameServices.colorGameDataToFirebase(deviceTime!,disapearTime!,(positionX*screenWidth),(positionY*screenHeight),colorMap.keys.elementAt(index-1),textColors[index-1],voiceToText,intervalTime);
+           _stopSubRecording().whenComplete((){
+            //ColorGameServices.colorGameDataToFirebase(deviceTime!,disapearTime!,(positionX*screenWidth),(positionY*screenHeight),colorMap.keys.elementAt(index-1),textColors[index-1],intervalTime);
+            PictureTestServices.pictureTestDataToFirebase(deviceTime!, disapearTime!, (positionX*screenWidth), (positionY*screenHeight), pictureName[index-1], intervalTime);
+            value++;
+            _startSubRecording();
+          });
         }
         else{
           timer.cancel();
         }
         setState(() {});
         Future.delayed(const Duration(seconds: 1),(){
-          //voiceToText = "Skipped";
           secondCount--;
 
           if(index<pictureList.length){
             currentIndex = index;
             getRandomPosition();
-            //startListening();
             deviceTime = DateTime.now();
             setState(() {});
           }
@@ -164,13 +180,97 @@ class _PictureTestState extends State<PictureTest> {
     positionY = (0.1 + random.nextDouble() * (0.6 - 0.1));
   }
 
+  //Voice record
+ FlutterSoundRecorder? _recorder;
+ FlutterSoundRecorder? _recorder2;
+ String? _filePath;
+ String? _filePath2;
+ bool isRecording = false;
+ bool isRecording2 = false;
+ int value = 0;
+
+ Future<void> _initialize() async {
+    _recorder = FlutterSoundRecorder();
+    await Permission.microphone.request();
+    await Permission.storage.request();
+    await _recorder!.openRecorder();
+  }
+
+  Future<void> _initializeSubRecording() async {
+    _recorder2 = FlutterSoundRecorder();
+    await _recorder2!.openRecorder();
+  }
+
+  Future<void> _startRecording() async {
+    if(!isRecording){
+      final externalDir = await getExternalStorageDirectory();
+      _filePath = '${externalDir!.path}/recording.aac';
+      await _recorder!.startRecorder(toFile: _filePath, codec: Codec.aacMP4,);
+      setState(() {
+        isRecording = true;
+      });
+    }
+  }
+
+  Future<void> _startSubRecording() async {
+    if(!isRecording2){
+      final externalDir = await getExternalStorageDirectory();
+      _filePath2 = '${externalDir!.path}/subRecording${value.toString()}.aac';
+      await _recorder2!.startRecorder(toFile: _filePath2, codec: Codec.aacMP4,);
+      setState(() {
+        isRecording2 = true;
+      });
+    }
+  }
+
+  Future<void> _stopRecording() async {
+    await _recorder!.stopRecorder();
+    debugPrint('Recording saved to: $_filePath');
+    if(_filePath != null && _filePath!.isNotEmpty){
+      PictureTestServices.sendAudioToDatabase(_filePath!);
+    }
+    setState(() {});
+  }
+
+  Future<void> _stopSubRecording() async {
+    await _recorder2!.stopRecorder();
+    debugPrint('Sub Recording saved to: $_filePath2');
+    setState(() {
+      isRecording2 = false;
+    });
+  }
+  
+  String speechTotext = '';
+  int success = 0;
+  Future<void> speechToTextConvertion() async{
+    for(int i=0;i<=12;i++){
+      String apiKey = "0a8bc449c65e40b5b9e4cbfd553ba7dd56ae805f";
+      Deepgram deepgram = Deepgram(apiKey);
+      File audioFile = File('/storage/emulated/0/Android/data/com.example.neuro_task/files/subRecording$i.aac');
+      String json  = await deepgram.transcribeFromFile(audioFile);
+      Map<String, dynamic> data = jsonDecode(json);
+      speechTotext = data['results']['channels'][0]['alternatives'][0]['transcript'];
+      if(speechTotext.toLowerCase().contains(pictureName[i])){
+        success = 1;
+      }
+      else{
+        success = 0;
+      }
+     // ColorGameServices.colorGameSpeechToTextData(i, speechTotext, success);
+     PictureTestServices.pictureTestSpeechToTextData(i, speechTotext, success);
+    }
+  }
+
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showMyDialog();
-    });
+    _initialize();
+    _initializeSubRecording();
     getRandomPosition();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      startMessage();
+    });
   }
 
   double height = 0.0, width = 0.0;
@@ -205,11 +305,14 @@ class _PictureTestState extends State<PictureTest> {
                       ),
                     )
                   ),
-                  const StartMessage(gameName: 'Picture Test',
-                  description: "Say aloud the single word that best corresponds to the picture shown. Tap continue to start and submit when you are done."),
+                  const StartMessage(
+                    gameName: 'Picture Test',
+                    description: "Say aloud the single word that best corresponds to the picture shown. Tap continue to start and submit when you are done."
+                  ),
                   TextButton(
                     onPressed: (){
-                      //timer!.cancel();
+                      _stopRecording();
+                      speechToTextConvertion();
                       Get.to(const HomePage());
                     },
                     child: Text("Submit",

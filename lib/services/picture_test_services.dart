@@ -6,36 +6,32 @@ import 'package:intl/intl.dart';
 import 'package:neuro_task/pages/homepage.dart';
 import 'package:neuro_task/pages/splash_screen.dart';
 
-class ColorGameServices{
+class PictureTestServices{
  
   static List<String> docsName = [];
 
-  static Future<void> colorGameDataToFirebase(
+  static Future<void> pictureTestDataToFirebase(
       DateTime deviceTime,
-      DateTime textDisappearTime,
-      double colorPositionX,
-      double colorPositionY,
-      String textContent,
-      String textColor,
-      int textChangeDuration,
+      DateTime pictureDisappearTime,
+      double picturePositionX,
+      double picturePositionY,
+      String pictureContent,
+      int pictureChangeDuration,
     ) async{
     DateTime currentTime = DateTime.now();
     String deviceTimeForFirebase = DateFormat('HH:mm:ss').format(deviceTime);
-    String textDisappearTimeForFirebase = DateFormat('HH:mm:ss').format(textDisappearTime);
+    String textDisappearTimeForFirebase = DateFormat('HH:mm:ss').format(pictureDisappearTime);
     try{
       String doc = currentTime.toString();
       docsName.add('$doc - $patientId');
-      FirebaseFirestore.instance.collection('Color Game - 1005 - $patientemail').doc('$doc - $patientId').set({
+      FirebaseFirestore.instance.collection('Picture Test - 1006 - $patientemail').doc('$doc - $patientId').set({
         'Pateint Id' : patientId,
         'Device Time' : deviceTimeForFirebase,
-        'Text Appear Time' : deviceTimeForFirebase,
-        'Text Disappear Time' : textDisappearTimeForFirebase,
-        'Text appear Location (x,y)' : '$colorPositionX , $colorPositionY',
-        'Text Content' : textContent,
-        'Text Color' : textColor,
-        //'Text from voice to text' : textFromSpeech,
-        'Text_Change_Duration' : textChangeDuration,
-        //'Success' : (textFromSpeech.toLowerCase().contains(textContent.toLowerCase()) || textFromSpeech.toLowerCase() == textContent.toLowerCase()) ? 1 : 0,
+        'Picture Appear Time' : deviceTimeForFirebase,
+        'Picture Disappear Time' : textDisappearTimeForFirebase,
+        'Picture Appear Location (x,y)' : '$picturePositionX , $picturePositionY',
+        'Picture Content' : pictureContent,
+        'Picture Change Duration' : pictureChangeDuration,
       }).then((value) => {
         // ignore: avoid_print
         print('seccess'),
@@ -50,9 +46,9 @@ class ColorGameServices{
     }
   }
 
-  static Future<void> colorGameSpeechToTextData(int index,String speechTotext,int success) async{
+  static Future<void> pictureTestSpeechToTextData(int index,String speechTotext,int success) async{
     try{
-      FirebaseFirestore.instance.collection('Color Game - 1005 - $patientemail').doc(docsName[index]).update({
+      FirebaseFirestore.instance.collection('Picture Test - 1006 - $patientemail').doc(docsName[index]).update({
        'Success' : success,
        'Text from voice to text' : speechTotext,
       }).then((value) => {
@@ -72,13 +68,13 @@ class ColorGameServices{
   static Future<void> sendAudioToDatabase (String filePath) async{
   try {
     final FirebaseStorage storage = FirebaseStorage.instance;
-    final Reference ref = storage.ref().child('videos/Color Game-1005-$patientemail-${DateTime.now()}.aac'); // Use a unique filename
+    final Reference ref = storage.ref().child('videos/Picture Test-1006-$patientemail-${DateTime.now()}.aac'); // Use a unique filename
     final UploadTask uploadTask = ref.putFile(File(filePath));
 
     final TaskSnapshot snapshot = await uploadTask;
     final String downloadUrl = await snapshot.ref.getDownloadURL();
-    FirebaseFirestore.instance.collection("Color Game - 1005 - $patientemail - Video & Audio").doc(DateTime.now().toString()).set({
-      'game_id' : '1005',
+    FirebaseFirestore.instance.collection("Picture Test - 1006 - $patientemail - Video & Audio").doc(DateTime.now().toString()).set({
+      'game_id' : '1006',
       'patient_id' : patientId.toString(),
       'device_time' : DateTime.now().toString(),
       'audio' : downloadUrl,

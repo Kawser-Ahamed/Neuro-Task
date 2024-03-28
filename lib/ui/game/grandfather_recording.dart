@@ -8,7 +8,7 @@ import 'package:neuro_task/constant/responsive.dart';
 import 'package:neuro_task/pages/homepage.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:neuro_task/services/grandfatherpassage_services.dart';
-import 'package:neuro_task/ui/game/grandfatherpassage_start_message.dart';
+import 'package:neuro_task/ui/message/start_message.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:just_audio/just_audio.dart';
@@ -30,6 +30,9 @@ class _GrandFatherRecordingState extends State<GrandFatherRecording> {
     _recorder = FlutterSoundRecorder();
     _noiseMeter = NoiseMeter(onError);
     _initialize();
+     WidgetsBinding.instance.addPostFrameCallback((_) {
+      startMessage();
+    });
   }
   
   //Noise Level
@@ -75,8 +78,8 @@ class _GrandFatherRecordingState extends State<GrandFatherRecording> {
   Widget voiceIcon(){
     if(!_isRecording){
       return Container(
-        height: screenHeight * 0.1,
-        width: screenWidth * 0.1,
+        height: height * 0.1,
+        width: width * 0.1,
         color: Colors.transparent,
         child: const FittedBox(
           child: Icon(
@@ -89,28 +92,28 @@ class _GrandFatherRecordingState extends State<GrandFatherRecording> {
     else if(_latestReading!.maxDecibel>= 56 && _latestReading!.maxDecibel>= 70){
       return Icon(
         CupertinoIcons.speaker_1_fill,
-        size: (screenWidth/Responsive.designWidth) * 40,
+        size: (width/Responsive.designWidth) * 40,
         color: Colors.green,
       );
     }
     else if(_latestReading!.maxDecibel> 70 && _latestReading!.maxDecibel>= 89){
       return Icon(
         CupertinoIcons.speaker_2_fill,
-        size: (screenWidth/Responsive.designWidth) * 40,
+        size: (width/Responsive.designWidth) * 40,
         color: Colors.green,
       );
     }
     else if(_latestReading!.maxDecibel>= 90){
       return Icon(
         CupertinoIcons.volume_up,
-        size: (screenWidth/Responsive.designWidth) * 40,
+        size: (width/Responsive.designWidth) * 40,
         color: Colors.green,
       );
     }
     else{
       return Icon(
         CupertinoIcons.volume_off,
-        size: (screenWidth/Responsive.designWidth) * 40,
+        size: (width/Responsive.designWidth) * 40,
         color: Colors.red,
       );
     }
@@ -205,15 +208,83 @@ Future<void> _playRecordedAudio() async {
     super.dispose();
   }
 
+    startMessage(){
+    return showGeneralDialog(
+      transitionDuration: const Duration(milliseconds: 500),
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).dialogLabel,
+      context: context, 
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.55,
+              color: Colors.white,
+              child: Card(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Text("Grandfather Passage",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: (width/Responsive.designWidth) * 40,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: height * 0.05),
+                    Padding(
+                      padding: EdgeInsets.only(left: width * 0.02),
+                      child: Text("Instruction",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: (width/Responsive.designWidth) * 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.02,vertical: height * 0.02),
+                      child: Text("read the passage shown aloud.Tap continue to begin and submit when you are done.",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: (width/Responsive.designWidth) * 30,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: height * 0.02),
+                    TextButton(
+                      onPressed: (){
+                        startTimer();
+                        Navigator.pop(context);
+                      }, 
+                      child: Text("Continue",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: (width/Responsive.designWidth) * 40,
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromARGB(166, 207, 207, 11),
+                      ),
+                    ),
+                    ),
+                  ],
+                ),
+              )
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   int count = 0;
-  double screenHeight = 0.0,screenWidth = 0.0;
+  double height = 0.0,width = 0.0;
   
   @override
   Widget build(BuildContext context) {
-    double height = Responsive.screenHeight(context);
-    double width = Responsive.screenWidth(context);
-    screenHeight = height;
-    screenWidth = width;
+    height = Responsive.screenHeight(context);
+    width = Responsive.screenWidth(context);
     return Container(
       height: height * 1,
       width: width * 1,
@@ -221,49 +292,45 @@ Future<void> _playRecordedAudio() async {
       child: SingleChildScrollView(
         child: Column(
           children: [
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: (){
-                    Get.to(const HomePage());
-                  },
-                  child: Text("Back",
-                  style: TextStyle(
-                    fontSize: (width / Responsive.designWidth) * 30,
-                    color: const Color.fromARGB(166, 207, 207, 11),
-                    ),
-                  )
-                  ),
-                InkWell(
-                onTap: (){
-                  GrandFatherStartMessage.startMessage(context);
-                },
-                  child: Container(
-                  height: height * 0.05,
-                  width: width * 0.1,
-                  color: Colors.transparent,
-                  child: const FittedBox(
-                    child: Icon(CupertinoIcons.info,color: Color.fromARGB(166, 207, 207, 11),),
-                  ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: (){
-                    _stopPlaying();
-                    if(_filePath != null && _filePath!.isNotEmpty){
-                      GrandFatherPassageServices.sendAudioToDatabase(_filePath!);
-                    }
-                  },
-                  child: Text("Submit",
-                  style: TextStyle(
-                      fontSize: (width/Responsive.designWidth) * 30,
+          Container(
+            height: height * 0.1,
+            width: width * 1,
+            color: Colors.transparent,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: (){
+                      Get.to(const HomePage());
+                    },
+                    child: Text("Back",
+                    style: TextStyle(
+                      fontSize: (width / Responsive.designWidth) * 30,
                       color: const Color.fromARGB(166, 207, 207, 11),
                       ),
-                  )
-                ),
-              ],
-            ),
+                    )
+                    ),
+                  const StartMessage(
+                    gameName: 'Grandfather Passage',
+                    description: "Read the passage shown aloud.Tap continue to start and submit when you are done."
+                  ),
+                  TextButton(
+                    onPressed: (){
+                      _stopPlaying();
+                      if(_filePath != null && _filePath!.isNotEmpty){
+                        GrandFatherPassageServices.sendAudioToDatabase(_filePath!);
+                      }
+                    },
+                    child: Text("Submit",
+                    style: TextStyle(
+                        fontSize: (width/Responsive.designWidth) * 30,
+                        color: const Color.fromARGB(166, 207, 207, 11),
+                        ),
+                    )
+                  ),
+                ],
+              ),
+          ),
             SizedBox(height: height * 0.05),
             const MyText(text: "Grandfather Passage", size: 20, bold: true, color: Colors.white,height: 0.05,width: 1),
             SizedBox(height: height * 0.02),

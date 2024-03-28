@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:neuro_task/constant/my_text.dart';
 import 'package:neuro_task/constant/responsive.dart';
 import 'package:neuro_task/ui/game/grandfather_recording.dart';
-import 'package:neuro_task/ui/game/grandfatherpassage_start_message.dart';
 
 class GrandFatherPassage extends StatefulWidget {
   const GrandFatherPassage({super.key});
@@ -39,11 +38,7 @@ class _GrandFatherPassageState extends State<GrandFatherPassage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      InkWell(
-                        onTap: (){
-                          GrandFatherStartMessage.startMessage(context);
-                        },
-                        child: const MyText(text: "Instruction", size: 30, bold: true, color: Colors.white,height: 0.05,width: 0.3)),
+                      const MyText(text: "Grandfather Passage", size: 30, bold: true, color: Colors.white,height: 0.05,width: 0.6),
                       Icon(
                         CupertinoIcons.speaker_2_fill,
                         size:  width * 0.08,

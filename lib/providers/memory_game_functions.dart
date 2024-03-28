@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class MemoryGameFunctions{
@@ -30,9 +29,9 @@ class MemoryGameFunctions{
   }
 
   static int cardPosition = 0;
-  static void cardPositionValue(TapUpDetails details) {
-    final cardHeight = 450.h;
-    final cardWidth = 300.w;
+  static void cardPositionValue(TapUpDetails details,BuildContext context) {
+    final cardHeight = MediaQuery.of(context).size.height * 0.2;
+    final cardWidth = MediaQuery.of(context).size.width * 0.3;
     final offsetX = details.localPosition.dx - cardWidth / 2;
     final offsetY = details.localPosition.dy - cardHeight / 2;
 

@@ -1,15 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
+import 'package:deepgram_speech_to_text/deepgram_speech_to_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get/get.dart';
-import 'package:neuro_task/constant/my_text.dart';
 import 'package:neuro_task/constant/responsive.dart';
 import 'package:neuro_task/pages/homepage.dart';
 import 'package:neuro_task/services/color_game_services.dart';
-import 'package:neuro_task/ui/game/game_start_message.dart';
-import 'package:speech_to_text/speech_to_text.dart';
+import 'package:neuro_task/ui/message/start_message.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class ColorGame extends StatefulWidget {
   const ColorGame({super.key});
@@ -20,32 +22,6 @@ class ColorGame extends StatefulWidget {
 
 class _ColorGameState extends State<ColorGame> {
 
-  startMessage(){
-    return showDialog(
-      context: context, 
-      builder: (context) {
-        return AlertDialog(
-          title: const MyText(text: "Color Game", size: 20, bold: true, color: Colors.black,height: 0.05,width: 1),
-          actions: [
-            const MyText(text: "Read the text loudly.", size: 15, bold: false, color: Colors.black,height: 0.05,width: 1),
-            TextButton(
-              onPressed: (){
-                startListening();
-                deviceTime = DateTime.now();
-                startTimer();
-                Navigator.pop(context);
-              }, 
-              child: const MyText(text: "OK", size: 20, bold: false, color: Colors.deepPurple,height: 0.05,width: 0.05,),
-            ),
-          ],
-        );
-      },
-    ).then((value){
-      // startListening();
-      // _startRecording();
-    });
-  }
-  
   Map<String,Color> colorMap = {
     "Red" : Colors.yellow,
     "Green" : Colors.blue,
@@ -71,6 +47,80 @@ class _ColorGameState extends State<ColorGame> {
     "Yellow",
   ];
 
+  startMessage(){
+    return showGeneralDialog(
+      transitionDuration: const Duration(milliseconds: 500),
+      barrierDismissible: false,
+      barrierLabel: MaterialLocalizations.of(context).dialogLabel,
+      context: context, 
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.5,
+              width: MediaQuery.of(context).size.width * 0.55,
+              color: Colors.white,
+              child: Card(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Text("Color Game",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: (width/Responsive.designWidth) * 40,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: height * 0.05),
+                    Padding(
+                      padding: EdgeInsets.only(left: width * 0.02),
+                      child: Text("Instruction",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: (width/Responsive.designWidth) * 30,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.02,vertical: height * 0.02),
+                      child: Text("Say aloud the color of the following words.Not the word itself.Tap continue to begin and submit when you are done.",
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontSize: (width/Responsive.designWidth) * 30,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: height * 0.02),
+                    TextButton(
+                      onPressed: (){
+                        deviceTime = DateTime.now();
+                        startTimer();
+                        _startRecording();
+                        _startSubRecording();
+                        Navigator.pop(context);
+                      }, 
+                      child: Text("Continue",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: (width/Responsive.designWidth) * 40,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(166, 207, 207, 11),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   double positionX = 0.0;
   double positionY= 0.0;
   Random random = Random();
@@ -79,6 +129,8 @@ class _ColorGameState extends State<ColorGame> {
     positionX = (0 + random.nextDouble() * (0.7 - 0));
     positionY = (0.1 + random.nextDouble() * (0.8 - 0.1));
   }
+
+
 
   int secondCount = 0;
   int index = 0;
@@ -97,21 +149,21 @@ class _ColorGameState extends State<ColorGame> {
         currentIndex = -1;
         if(index < colorMap.length){
           index++;
-          stopSpeechRecord();
-          ColorGameServices.colorGameDataToFirebase(deviceTime!,disapearTime!,(positionX*screenWidth),(positionY*screenHeight),colorMap.keys.elementAt(index-1),textColors[index-1],voiceToText,intervalTime);
+          _stopSubRecording().whenComplete((){
+            ColorGameServices.colorGameDataToFirebase(deviceTime!,disapearTime!,(positionX*screenWidth),(positionY*screenHeight),colorMap.keys.elementAt(index-1),textColors[index-1],intervalTime);
+            value++;
+            _startSubRecording();
+          });
         }
         else{
           timer.cancel();
         }
         setState(() {});
         Future.delayed(const Duration(seconds: 1),(){
-          voiceToText = "Skipped";
           secondCount--;
-
           if(index<colorMap.length){
             currentIndex = index;
             getRandomPosition();
-            startListening();
             deviceTime = DateTime.now();
             setState(() {});
           }
@@ -121,65 +173,93 @@ class _ColorGameState extends State<ColorGame> {
   }
 
 
-  //Speech To Text
-  SpeechToText speechToText = SpeechToText();
-  FlutterSoundRecorder? _recorder;
-  String voiceToText = "Skipped";
-  bool isEnabled = false;
+ //Voice record
+ FlutterSoundRecorder? _recorder;
+ FlutterSoundRecorder? _recorder2;
+ String? _filePath;
+ String? _filePath2;
+ bool isRecording = false;
+ bool isRecording2 = false;
+ int value = 0;
 
-  Future<void> speechToTextInitialization() async{
-    isEnabled = await speechToText.initialize();
+ Future<void> _initialize() async {
+    _recorder = FlutterSoundRecorder();
+    await Permission.microphone.request();
+    await Permission.storage.request();
+    await _recorder!.openRecorder();
+  }
+
+  Future<void> _initializeSubRecording() async {
+    _recorder2 = FlutterSoundRecorder();
+    await _recorder2!.openRecorder();
+  }
+
+  Future<void> _startRecording() async {
+    if(!isRecording){
+      final externalDir = await getExternalStorageDirectory();
+      _filePath = '${externalDir!.path}/recording.aac';
+      await _recorder!.startRecorder(toFile: _filePath, codec: Codec.aacMP4,);
+      setState(() {
+        isRecording = true;
+      });
+    }
+  }
+
+  Future<void> _startSubRecording() async {
+    if(!isRecording2){
+      final externalDir = await getExternalStorageDirectory();
+      _filePath2 = '${externalDir!.path}/subRecording${value.toString()}.aac';
+      await _recorder2!.startRecorder(toFile: _filePath2, codec: Codec.aacMP4,);
+      setState(() {
+        isRecording2 = true;
+      });
+    }
+  }
+
+  Future<void> _stopRecording() async {
+    await _recorder!.stopRecorder();
+    debugPrint('Recording saved to: $_filePath');
+    if(_filePath != null && _filePath!.isNotEmpty){
+      ColorGameServices.sendAudioToDatabase(_filePath!);
+    }
     setState(() {});
   }
 
-  Future<void> startListening() async {
-    await speechToText.listen( onResult: startSpeechRecord);
-    setState(() {});
-  }
-
-  Future<void> startSpeechRecord(result) async{
+  Future<void> _stopSubRecording() async {
+    await _recorder2!.stopRecorder();
+    debugPrint('Recording saved to: $_filePath2');
     setState(() {
-      voiceToText = "${result.recognizedWords}";
+      isRecording2 = false;
     });
   }
-
-  Future<void> stopSpeechRecord() async{
-    await speechToText.stop();
-    setState(() {});
+  
+  String speechTotext = '';
+  int success = 0;
+  Future<void> speechToTextConvertion() async{
+    for(int i=0;i<=8;i++){
+      String apiKey = "0a8bc449c65e40b5b9e4cbfd553ba7dd56ae805f";
+      Deepgram deepgram = Deepgram(apiKey);
+      File audioFile = File('/storage/emulated/0/Android/data/com.example.neuro_task/files/subRecording$i.aac');
+      String json  = await deepgram.transcribeFromFile(audioFile);
+      Map<String, dynamic> data = jsonDecode(json);
+      speechTotext = data['results']['channels'][0]['alternatives'][0]['transcript'];
+      if(speechTotext.toLowerCase().contains(textColors[i])){
+        success = 1;
+      }
+      else{
+        success = 0;
+      }
+      ColorGameServices.colorGameSpeechToTextData(i, speechTotext, success);
+    }
   }
 
- //Voice record
-//  String? _filePath;
-//  bool isRecording = false;
-
-//  Future<void> _initialize() async {
-//     _recorder = FlutterSoundRecorder();
-//     await Permission.microphone.request();
-//     await Permission.storage.request();
-//     await _recorder!.openRecorder();
-//   }
-
-//   Future<void> _startRecording() async {
-//     if(!isRecording){
-//       final externalDir = await getExternalStorageDirectory();
-//       _filePath = '${externalDir!.path}/recording.aac';
-//       await _recorder!.startRecorder(toFile: _filePath, codec: Codec.aacMP4,);
-//       setState(() {
-//         isRecording = true;
-//       });
-//     }
-//   }
-
-//   Future<void> _stopRecording() async {
-//     await _recorder!.stopRecorder();
-//     // ignore: avoid_print
-//     print('Recording saved to: $_filePath');
-//     setState(() {});
-//   }
+  double height = 0.0;
+  double width = 0.0;
 
   @override
   void initState() {
-    speechToTextInitialization();
+    _initialize();
+    _initializeSubRecording();
     getRandomPosition();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       startMessage();
@@ -195,8 +275,8 @@ class _ColorGameState extends State<ColorGame> {
 
   @override
   Widget build(BuildContext context) {
-    double height = Responsive.screenHeight(context);
-    double width = Responsive.screenWidth(context);
+    height = Responsive.screenHeight(context);
+    width = Responsive.screenWidth(context);
     screenHeight = height;
     screenWidth = width;
     return Scaffold(
@@ -222,27 +302,14 @@ class _ColorGameState extends State<ColorGame> {
                     ),
                   )
                   ),
-                InkWell(
-                onTap: (){
-                  GameStartMessage.startMessage(context,"Color Game","Read the loudly");
-                },
-                  child: Container(
-                  height: height * 0.05,
-                  width: width * 0.1,
-                  margin: EdgeInsets.only(bottom: height * 0.005),
-                  color: Colors.transparent,
-                  child: const FittedBox(
-                    child: Icon(CupertinoIcons.info,color: Color.fromARGB(166, 207, 207, 11),),
-                  ),
-                  ),
+                const StartMessage(
+                  gameName: 'Color Game',
+                  description: "Say aloud the color of the following words.Not the word itself.Tap continue to begin and submit when you are done."
                 ),
                 TextButton(
                   onPressed: (){
-                    stopSpeechRecord();
-                    // _stopRecording();
-                    //  if(_filePath != null && _filePath!.isNotEmpty){
-                    //   ColorGameServices.sendAudioToDatabase(_filePath!);
-                    // }
+                    _stopRecording();
+                    speechToTextConvertion();
                     Get.to(const HomePage());
                   },
                   child: Text("Submit",
