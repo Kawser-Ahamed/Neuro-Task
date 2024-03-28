@@ -243,7 +243,7 @@ class _ColorGameState extends State<ColorGame> {
       String json  = await deepgram.transcribeFromFile(audioFile);
       Map<String, dynamic> data = jsonDecode(json);
       speechTotext = data['results']['channels'][0]['alternatives'][0]['transcript'];
-      if(speechTotext.toLowerCase().contains(textColors[i])){
+      if(speechTotext.toLowerCase().contains(textColors[i].toLowerCase())){
         success = 1;
       }
       else{

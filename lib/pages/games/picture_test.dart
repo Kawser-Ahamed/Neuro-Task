@@ -250,7 +250,7 @@ class _PictureTestState extends State<PictureTest> {
       String json  = await deepgram.transcribeFromFile(audioFile);
       Map<String, dynamic> data = jsonDecode(json);
       speechTotext = data['results']['channels'][0]['alternatives'][0]['transcript'];
-      if(speechTotext.toLowerCase().contains(pictureName[i])){
+      if(speechTotext.toLowerCase().contains(pictureName[i].toLowerCase())){
         success = 1;
       }
       else{
