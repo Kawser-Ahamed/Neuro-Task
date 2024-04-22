@@ -6,6 +6,7 @@ import 'package:neuro_task/constant/responsive.dart';
 //import 'package:neuro_task/constant/ip.dart';
 import 'package:neuro_task/pages/authentication/login.dart';
 import 'package:neuro_task/pages/games/color_game.dart';
+import 'package:neuro_task/pages/games/connect_the_dots.dart';
 import 'package:neuro_task/pages/games/grandfather_passage.dart';
 import 'package:neuro_task/pages/games/memory_game.dart';
 //import 'package:http/http.dart' as http;
@@ -124,6 +125,12 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 child: customCard("Picture Test","Say the word that best corresponds to the picture shown.","assets/images/umbrella.png"),
                               ),
+                              GestureDetector(
+                                onTap: (){
+                                  Get.to(const ConnectTheDots());
+                                },
+                                child: customCard("Connect The Dots","Connect the dots in increasing numerical order from 1-10.","assets/images/dot_connect.png"),
+                              ),
                               TextButton(
                                 onPressed: () async{
                                   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -132,6 +139,7 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 child: const Text('Logout'),
                               ),
+                              SizedBox(height: height * 0.05),
                             ],
                           ),
                         )

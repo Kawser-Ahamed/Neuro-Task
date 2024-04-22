@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:neuro_task/firebase_options.dart';
 import 'package:neuro_task/pages/splash_screen.dart';
+//import 'package:neuro_task/pages/test.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();

@@ -54,7 +54,6 @@ class _TargetGameState extends State<TargetGame> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              height: MediaQuery.of(context).size.height * 0.5,
               width: MediaQuery.of(context).size.width * 0.55,
               color: Colors.white,
               child: Card(
