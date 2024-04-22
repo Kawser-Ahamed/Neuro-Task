@@ -205,8 +205,8 @@ class _ConnectTheDotsState extends State<ConnectTheDots> {
                   if (isPointOnCircle(Offset(entry.value.dx * width, entry.value.dy * height),details.localPosition,circleRadius)) {
                     if (lastEnteredCircle != entry.key) {
                       final intersection = findIntersection(entry.value.dx * width,entry.value.dy * height, details.localPosition.dx, details.localPosition.dy);
-                      print("Container ${entry.key} Center: (${entry.value.dx * width}, ${entry.value.dy * height})");
-                      print("Intersection Point: (${intersection.dx}, ${intersection.dy})");
+                      //print("Container ${entry.key} Center: (${entry.value.dx * width}, ${entry.value.dy * height})");
+                      //print("Intersection Point: (${intersection.dx}, ${intersection.dy})");
                       DateTime now = DateTime.now();
                       gameInformation[indexKey] = {
                         'Device Time' : '${now.hour}:${now.minute}:${now.second}',
