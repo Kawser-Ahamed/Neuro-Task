@@ -13,6 +13,7 @@ import 'package:neuro_task/pages/games/memory_game.dart';
 import 'package:neuro_task/pages/games/narration.dart';
 import 'package:neuro_task/pages/games/picture_test.dart';
 import 'package:neuro_task/pages/games/target_game.dart';
+import 'package:neuro_task/pages/games/visuospatial_test.dart';
 import 'package:neuro_task/pages/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -130,6 +131,12 @@ class _HomePageState extends State<HomePage> {
                                   Get.to(const ConnectTheDots());
                                 },
                                 child: customCard("Connect The Dots","Connect the dots in increasing numerical order from 1-10.","assets/images/dot_connect.png"),
+                              ),
+                               GestureDetector(
+                                onTap: (){
+                                  Get.to(const VisuospatialTest());
+                                },
+                                child: customCard("Visospatial Test","Connect the shapes in increasing numerical order from 1-10.","assets/images/shape.jpg"),
                               ),
                               TextButton(
                                 onPressed: () async{

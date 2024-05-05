@@ -5,20 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:neuro_task/constant/responsive.dart';
 import 'package:neuro_task/pages/homepage.dart';
-import 'package:neuro_task/services/connect_the_dots_services.dart';
+import 'package:neuro_task/services/visuospatial_test_services.dart';
 import 'package:neuro_task/ui/message/start_message.dart';
 import 'package:screenshot/screenshot.dart';
 
-class ConnectTheDots extends StatefulWidget {
-  const ConnectTheDots({super.key});
+class VisuospatialTest extends StatefulWidget {
+  const VisuospatialTest({super.key});
 
   @override
-  State<ConnectTheDots> createState() => _ConnectTheDotsState();
+  State<VisuospatialTest> createState() => _VisuospatialTestState();
 }
 
-class _ConnectTheDotsState extends State<ConnectTheDots> {
+class _VisuospatialTestState extends State<VisuospatialTest> {
 
-  startMessage(){
+   startMessage(){
     return showGeneralDialog(
       transitionDuration: const Duration(milliseconds: 500),
       barrierDismissible: false,
@@ -35,7 +35,7 @@ class _ConnectTheDotsState extends State<ConnectTheDots> {
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                    Text("Connects The Dots",
+                    Text("Visuospatial Test",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: (width/Responsive.designWidth) * 40,
@@ -55,7 +55,7 @@ class _ConnectTheDotsState extends State<ConnectTheDots> {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.02,vertical: height * 0.02),
-                      child: Text("Draw a line connecting the dots in increasing numerical order from 1-10. Tap continue to begin and submit when you are done.",
+                      child: Text("Draw a line connecting the shapes in increasing numerical order from 1-10. Tap continue to begin and submit when you are done.",
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: (width/Responsive.designWidth) * 30,
@@ -86,44 +86,47 @@ class _ConnectTheDotsState extends State<ConnectTheDots> {
       },
     );
   }
+
+  String url = 'assets/images/';
   Map<int,Map<String, Offset>> circlePositions = {
     1 : {
-      '1' : const Offset(0.5, 0.2),
-      '2' : const Offset(0.2, 0.35),
-      '3' : const Offset(0.45, 0.35),
-      '4' : const Offset(0.3, 0.5),
-      '5' : const Offset(0.55, 0.45),
-      '6' : const Offset(0.7, 0.3),
-      '7' : const Offset(0.8, 0.4),
-      '8' : const Offset(0.5, 0.6),
-      '9' : const Offset(0.8, 0.55),
-      '10' : const Offset(0.4, 0.75),
+      'shape1' : const Offset(0.5, 0.2),
+      'shape2' : const Offset(0.2, 0.35),
+      'shape3' : const Offset(0.45, 0.35),
+      'shape4' : const Offset(0.3, 0.5),
+      'shape5' : const Offset(0.55, 0.45),
+      'shape6' : const Offset(0.7, 0.3),
+      'shape7' : const Offset(0.8, 0.4),
+      'shape8' : const Offset(0.5, 0.6),
+      'shape9' : const Offset(0.8, 0.55),
+      'shape10' : const Offset(0.4, 0.75),
     },
     2 : {
-      '1' : const Offset(0.1, 0.2),
-      '2' : const Offset(0.2, 0.3),
-      '3' : const Offset(0.3, 0.15),
-      '4' : const Offset(0.35, 0.5),
-      '5' : const Offset(0.6, 0.2),
-      '6' : const Offset(0.65, 0.35),
-      '7' : const Offset(0.9, 0.2),
-      '8' : const Offset(0.9, 0.6),
-      '9' : const Offset(0.8, 0.35),
-      '10' : const Offset(0.3, 0.8),
+      'shape1' : const Offset(0.1, 0.2),
+      'shape2' : const Offset(0.2, 0.3),
+      'shape3' : const Offset(0.3, 0.15),
+      'shape4' : const Offset(0.35, 0.5),
+      'shape5' : const Offset(0.6, 0.2),
+      'shape6' : const Offset(0.65, 0.35),
+      'shape7' : const Offset(0.9, 0.2),
+      'shape8' : const Offset(0.9, 0.6),
+      'shape9' : const Offset(0.8, 0.35),
+      'shape10' : const Offset(0.3, 0.8),
     },
     3 : {
-      '1' : const Offset(0.8, 0.7),
-      '2' : const Offset(0.6, 0.5),
-      '3' : const Offset(0.8, 0.3),
-      '4' : const Offset(0.4, 0.35),
-      '5' : const Offset(0.7, 0.2),
-      '6' : const Offset(0.1, 0.3),
-      '7' : const Offset(0.4, 0.6),
-      '8' : const Offset(0.1, 0.6),
-      '9' : const Offset(0.25, 0.7),
-      '10' : const Offset(0.8, 0.8),
+      'shape1' : const Offset(0.8, 0.7),
+      'shape2' : const Offset(0.6, 0.5),
+      'shape3' : const Offset(0.8, 0.3),
+      'shape4' : const Offset(0.4, 0.35),
+      'shape5' : const Offset(0.7, 0.2),
+      'shape6' : const Offset(0.1, 0.3),
+      'shape7' : const Offset(0.4, 0.6),
+      'shape8' : const Offset(0.1, 0.6),
+      'shape9' : const Offset(0.25, 0.7),
+      'shape10' : const Offset(0.8, 0.8),
     },
   };
+
   Random random = Random();
   int circlePositionKey = 1;
   String? lastEnteredCircle;
@@ -131,10 +134,11 @@ class _ConnectTheDotsState extends State<ConnectTheDots> {
   bool isFirstTouch = true;
   Map<int,Map<String,dynamic>> gameInformation = {};
   int indexKey = 1;
-  ConnectTheDotsServices connectTheDotsServices = ConnectTheDotsServices();
+  VisuospatialTestServices visuospatialTestServices = VisuospatialTestServices();
   
   void getRandomPosition(){
     circlePositionKey = random.nextInt(3) + 1;
+
   }
 
   final _screenshotController = ScreenshotController();
@@ -145,10 +149,11 @@ class _ConnectTheDotsState extends State<ConnectTheDots> {
     setState(() {
       _capturedImageBytes = imageBytes;
     }); 
-    connectTheDotsServices.connectTheDotsDataToFirebase(gameInformation).whenComplete((){
-      connectTheDotsServices.connectTheDotsScreenshotToFirebaseStorage(_capturedImageBytes!);
+    visuospatialTestServices.visuospatialTestDataToFirebase(gameInformation).whenComplete((){
+      visuospatialTestServices.visuospatialTestScreenshotToFirebaseStorage(_capturedImageBytes!);
     });
   }
+
 
   @override
   void initState() {
@@ -160,10 +165,10 @@ class _ConnectTheDotsState extends State<ConnectTheDots> {
   }
 
   double height = 0.0,width = 0.0;
-
+  
   @override
   Widget build(BuildContext context) {
-    height = Responsive.screenHeight(context);
+     height = Responsive.screenHeight(context);
     width = Responsive.screenWidth(context);
     final circleDiameter = width * 0.1;
     final circleRadius = circleDiameter / 2;
@@ -181,17 +186,11 @@ class _ConnectTheDotsState extends State<ConnectTheDots> {
                 width: circleDiameter,
                 height: circleDiameter,
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
                   color: Colors.transparent,
-                  border: Border.all(
-                    color: Colors.black,
-                    width: width * 0.005,
-                  )
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  entry.key,
-                  style: TextStyle(fontSize: circleDiameter * 0.4, color: Colors.black),
+                  image: DecorationImage(
+                    image: AssetImage('$url${entry.key}.jpg'),
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
             ),
@@ -205,13 +204,13 @@ class _ConnectTheDotsState extends State<ConnectTheDots> {
                   if (isPointOnCircle(Offset(entry.value.dx * width, entry.value.dy * height),details.localPosition,circleRadius)) {
                     if (lastEnteredCircle != entry.key) {
                       final intersection = findIntersection(entry.value.dx * width,entry.value.dy * height, details.localPosition.dx, details.localPosition.dy);
-                      //print("Container ${entry.key} Center: (${entry.value.dx * width}, ${entry.value.dy * height})");
-                      //print("Intersection Point: (${intersection.dx}, ${intersection.dy})");
+                      // print("Container ${entry.key} Center: (${entry.value.dx * width}, ${entry.value.dy * height})");
+                      // print("Intersection Point: (${intersection.dx}, ${intersection.dy})");
                       DateTime now = DateTime.now();
                       gameInformation[indexKey] = {
                         'Device Time' : '${now.hour}:${now.minute}:${now.second}',
-                        'Dot Number' : entry.key,
-                        'Dot Position Center (X,Y)' : '${entry.value.dx * width} , ${entry.value.dy * height}',
+                        'Shape Number' : entry.key,
+                        'Shape Position Center (X,Y)' : '${entry.value.dx * width} , ${entry.value.dy * height}',
                         'Line Position (X,Y)' : '${intersection.dx} , ${intersection.dy}',
                       };
                       indexKey++;
@@ -227,8 +226,8 @@ class _ConnectTheDotsState extends State<ConnectTheDots> {
                     DateTime now = DateTime.now();
                     gameInformation[indexKey] = {
                       'Device Time' : '${now.hour}:${now.minute}:${now.second}',
-                      'Dot Number' : -1,
-                      'Dot Position Center (X,Y)' : 'null',
+                      'Shape Number' : -1,
+                      'Shape Position Center (X,Y)' : 'null',
                       'Line Position (X,Y)' : 'null',
                     };
                     indexKey++;
@@ -269,8 +268,8 @@ class _ConnectTheDotsState extends State<ConnectTheDots> {
                     ),
                     ),
                     const StartMessage(
-                      gameName: 'Connect The Dots',
-                      description: "Draw a line connecting the dots in increasing numerical order from 1-10. Tap continue to begin and submit when you are done."
+                      gameName: 'Visuospatial Test',
+                      description: "Draw a line connecting the shpaes in increasing numerical order from 1-10. Tap continue to begin and submit when you are done."
                     ),
                     Card(
                       elevation: 0.0,
